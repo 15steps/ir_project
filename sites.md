@@ -1,0 +1,11 @@
+# Sites
+1. https://bestbuy.com
+2. https://store.apple.com/us
+3. https://samsung.com/us/mobile/phones/
+4. https://loja.asus.com.br/smartphones.html
+5. https://www.lg.com/us/cell-phones
+6. https://www.mi.com/en/list/
+7. https://www.motorola.com/us/products/moto-smartphones
+8. https://www.sonymobile.com/us/products/phones/
+9. https://bluproducts.com/android-phones/
+10. https://oneplusstore.com
