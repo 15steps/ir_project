@@ -1,0 +1,20 @@
+# For all search engines, it is prohibited to crawl any directory in this server 
+# Servers to be applied : DEV, STGWEB, live
+# The date to be applied : 2013. 11. 14
+# This robots file for HTTPS
+
+User-agent: *
+Disallow: /
+Allow: /us/*
+Allow: /*/business/*
+Allow: /global/seriftv/
+Allow: /ca/ses/*
+Allow: /ca_fr/ses/*
+Disallow: /us/shop/837
+Disallow: /us/shop/837/*
+Disallow: /us/epp/*
+Disallow: /us/api/*
+Disallow: /us/dealer/*
+Disallow: /us/search/
+Disallow: /us/business/search/
+Disallow: /*/business/search/

@@ -1,0 +1,3 @@
+User-agent: *
+Allow:/
+Sitemap: <http://store.asus.com/us/sitemap.xml>

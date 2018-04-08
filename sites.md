@@ -8,4 +8,4 @@
 7. https://www.motorola.com/us/products/moto-smartphones
 8. https://www.sonymobile.com/us/products/phones/
 9. https://bluproducts.com/android-phones/
-10. https://oneplusstore.com
+10. http://www.htc.com/us/
