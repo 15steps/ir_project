@@ -1,0 +1,21 @@
+#### robots.txt (SEO task force) 
+#### modified on 10/17
+#### modified on 01/18, by LU, removed some US specific Disallow
+#### 
+User-agent: *
+Disallow: /demoflo/
+Disallow: /workarea/
+Disallow: /widgets/
+Disallow: /uk/ohwemail/
+Disallow: /help/
+Disallow: /*/support/?*
+Disallow: /*/support/SupportViewCountAdd.aspx*
+Disallow: /*/support/howtoimage.aspx*
+Disallow: /chrome/
+Disallow: /Teamsitelibrary/
+Disallow: /*/reviews*
+Disallow: /*/support/contact/chat/*
+Disallow: /*/support/contact/email/*
+Disallow: /*/support/contact/phone/*
+Disallow: /us/go/live-chat/
+
