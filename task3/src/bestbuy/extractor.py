@@ -3,6 +3,11 @@ from helpers import getsoup, preprocess, getinnertext
 PHONE_PAGE = "../../html/bestbuy/phone.html"
 
 
+"""
+Extracts data from the specs section any smartphone page
+"""
+
+
 def main():
     soup = getsoup(PHONE_PAGE)
     body = soup.body

@@ -1,14 +1,16 @@
 from helpers import getsoup, getinnertext, preprocess
-import re
 
 PHONE_SPECS_PAGE = "../../html/apple/iphone_specs.html"
+
+"""
+Extracts data from the specs section of any spec page
+"""
 
 
 def main():
     soup = getsoup(PHONE_SPECS_PAGE)
     cleansoup = preprocess(soup)
     specs = cleansoup.find_all(class_="techspecs-section")
-    # print(specs)
     specsdict = getspecs(specs)
     print(specsdict)
 
