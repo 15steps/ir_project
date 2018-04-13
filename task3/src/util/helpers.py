@@ -1,11 +1,12 @@
 from bs4 import BeautifulSoup, Comment, NavigableString
+import lxml
 
 
 def getsoup(path):
     """
     Constructs a BeautifulSoup from a HTML file
     """
-    with open(path) as fp:
+    with open(path, encoding="utf-8") as fp:
         soup = BeautifulSoup(fp, "lxml")
     return soup
 
