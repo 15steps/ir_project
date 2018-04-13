@@ -14,6 +14,7 @@ def main():
     specsdict = getspecs(specs)
     print(specsdict)
 
+
 def getspecs(specs):
     dict = {}
     for spec in specs:
