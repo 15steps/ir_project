@@ -1,0 +1,303 @@
+<!doctype html>
+<html>
+<head>
+<title>BLU User Manuals </title>
+<meta charset="utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+<meta name="description" content="BLU" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="canonical" href="#" /> 
+<meta property="og:type" content="website" />
+<meta property="og:title" content="BLU User Manuals" />
+<meta property="og:image" content="http://bluproducts.com/core_assets/images/blulogo.png" />
+<meta property="og:description" content="BLU User Manuals" />
+<meta property="og:url" content="#" />
+<meta property="og:site_name" content="BLU Device User Manuals" />
+<link rel="icon" href="http://bluproducts.com/core_assets/images/favicon.ico" type="image/icon">
+<link rel="stylesheet" href="master.css" type="text/css" media="screen" />
+
+<script defer src="js/usermanuals.js"></script>
+<script>
+  var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-43555921-1']);
+	_gaq.push(['_trackPageview']);
+(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+  </script> 
+</head>
+<body class='body'>
+<header>
+    <nav>
+        <div class='navWrapIn'>     
+             <ul>
+                  <li class='logoWrap'><a href='http://bluproducts.com/home'><img src='images/blulogo.png' alt='blu' /></a></li>
+                   <li class='d-parent'><a href="http://bluproducts.com/android-phones">Devices</a></li>
+                   <li><a href='http://bluproducts.com/into-blu/about-us'>About</a></li>
+                   <li><a href="https://www.amazon.com/b/ref=sr_1_1_acs_h_1i_3562888011&node=3562888011?ie=UTF8&qid=1422463573&sr=8-1-acs">Shop</a></li>
+                   <li><a href="http://bluproducts.com/contact-sales">Contact</a></li>
+                   <li class='d-parent'><a href="http://bluproducts.com/contact-service">Support</a>
+                        <ul class='d-android'>
+                              <li><a href='http://bluproducts.com/contact-service#service'>Service</a></li>
+                              <li><a href='http://bluproducts.com/android-software-updates'>Software Updates</a></li>
+                              <li><a href='http://bluproducts.com/takeback-program'>Takeback program</a></li>
+                              <li><a href='http://bluproducts.com/r1-hd-device'>R1 HD Support</a></li>
+                        </ul>
+                   </li>
+              </ul>
+              </div> 
+              <div class='mobNav'>     
+                   <ul>
+                        <li class='mob-nav-delay'><a href="http://bluproducts.com/home">Home</a></li>
+                        <li class='mob-nav-delay'><a href="http://bluproducts.com/android-phones">Android</a></li>
+                        <li class='mob-nav-delay'><a href="http://bluproducts.com/contact-service">Support</a>
+                        <li class='mob-nav-delay'><a href='http://bluproducts.com/contact-service#ajx/contact-service'>Service</a></li>
+                        <li class='mob-nav-delay'><a href='http://bluproducts.com/android-software-updates'>Software Updates</a></li>
+                        <li class='mob-nav-delay'><a href='http://bluproducts.com/takeback-program'>Takeback program</a></li>
+                        <li class='mob-nav-delay'><a href="https://www.amazon.com/b/ref=sr_1_1_acs_h_1i_3562888011&node=3562888011?ie=UTF8&qid=1422463573&sr=8-1-acs">Shop</a></li>
+                  </ul>
+             </div>
+             <div class='moblogo'><a href='http://bluproducts.com/home'><img src='images/blulogo.png' alt='blu' /></a></div>
+             <div class='mobBtnO'><a href='#' onclick='menuFlyout();return false;'><img src='images/mob-menu.jpg' alt='menu' /></a></div> 
+             <div class='mobBtnC'><a href='#' onclick='menuClose();return false;'><img src='images/mob-menu-c.jpg' alt='menu' /></a></div>        
+      </nav>
+</header>
+<section class='and-banner'>
+    <!--<div id="banner_container"></div>-->
+    <div class='user-m-banner'></div>
+    <div class='m-head-w'> 
+         <h1>BLU User Manuals</h1>
+         <div>We're here to help with all of your BLU device questions. You can learn everything you need to know about your device
+         with our online manuals below.
+         </div>
+    </div>
+    <div id='searchManual-w'>
+          <form action='#'>
+           <input type='text' id='manualQtitle' placeholder='Enter Your Device Name' required>
+           <button type='submit' onclick="Series.queryManualList('.grid-wrap-w');return false;">Search Manuals</button>     
+          </form>           
+    </div>
+  </section>
+  <div class='section-w'>
+        <section class='l_menu'>
+             <div class='mobFilter-w'>
+                 <div class='hg-1x1'>
+                      <div class='navList-w'> 
+                      <div onclick='rNavD(this)' class='l-list-main l-list-main-d'>Search manuals by series <img src='images/expand.png' alt='series' /></div>
+                      <div class='r-nav-u l-list-main l-list-main-u'>Search manuals by series</div>    
+                      <ul class='seriesUl seriesListAndroid-ul'>
+                           <li onclick='Series.slideDown("advance",this);'>Advance Series</li>
+                           <li onclick='Series.slideDown("dash",this);'>Dash Series</li>
+                           <li onclick='Series.slideDown("energy",this);'>Energy Series</li>
+                           <li onclick='Series.slideDown("grand",this);'>Grand Series</li>
+                           <li onclick='Series.slideDown("life",this);'>Life Series</li>
+                           <li onclick='Series.slideDown("neo",this);'>Neo Series</li>
+                           <li onclick='Series.slideDown("pure",this);'>Pure Series</li>
+                           <li onclick='Series.slideDown("R",this);'>R Series</li>
+                           <li onclick='Series.slideDown("studio",this);'>Studio Series</li>
+                           <li onclick='Series.slideDown("tank",this);'>Tank Series</li>
+                           <li onclick='Series.slideDown("touchbook",this);'>Touchbook Series</li>
+                           <li onclick='Series.slideDown("vivo",this);'>Vivo Series</li>
+                           <li onclick='Series.slideDown("watch",this);'>Smart Watches</li>
+                           <li onclick='Series.slideDown("feature",this);'>Feature</li>
+                           <li onclick='Series.slideDown("specialty",this);'>Specialty</li>
+                      </ul>  
+                 </div>
+           </div>   
+      </div>
+ </section>
+ <section id='home-g-1' class='home-grid'>
+ <div class='grid-wrap-w'>
+       <p class='manualSeriesTtl'>Most Popular</p>
+      <div class='manualList-w'><a href='http://s536785483.onlinehome.us/usermanuals/index.php/pure-xr'>Pure XR</a></div>
+      <div class='manualList-w'><a href='http://s536785483.onlinehome.us/usermanuals/index.php/life-one-x2'>Life One X2</a></div>
+      <div class='manualList-w'><a href='http://s536785483.onlinehome.us/usermanuals/index.php/vivo-6'>Vivo 6</a></div>
+      <div class='manualList-w'><a href='http://s536785483.onlinehome.us/usermanuals/index.php/vivo-5r'>Vivo 5R</a></div>
+      <div class='manualList-w'><a href='http://s536785483.onlinehome.us/usermanuals/index.php/vivo-xl'>Vivo XL</a></div>
+      <div class='manualList-w'><a href='http://s536785483.onlinehome.us/usermanuals/index.php/energy-xl'>Energy XL</a></div>
+        
+ </div>
+ <div style='clear:both;'></div>
+ </section>
+ <div style='clear:both;'></div>
+ <!--<section class='glb-sec'>
+     <div class="cming-text">
+          <p>Be the first to know.</p>
+          <p>Join our VIP list <br />
+          </p>
+     </div> 
+     <div id='form'>
+          <form action='http://blu-devices.us-2.evennode.com/customer/add' method='post'>
+                   <input id='enterEmail-p' class='enterEmail-h' type='text' name='email' placeholder='Enter Your Email Address'  required>
+                   <input type="hidden" name="product_id" value='305'>
+                   <input type="hidden" name="region" value='us'>
+                   <input type="hidden" name="website_url" value='http://bluproducts.com/android-phones'>
+                   <input type="hidden" name="callback_url" value='http://bluproducts.com/android-phones'>
+                   <input type="hidden" name="item_title" value='vip'>
+                   <input type="hidden" name="item_desc" value='m_list'>
+                   <input type="hidden" name="ip" value='no ip'>
+                   <button class='notitify-h' type="submit" value='Notify Me' onclick='return ty(this.form,"enterEmail-p",".form_head");'>Subscribe</button>
+         </form>
+     </div>  
+</section> --> 
+</div>
+
+<footer>
+<div class='footer-i'>
+        <div class='foot-i-l'>      
+             <div class='flL'>
+                  <div class='f-nav-ttl'>Home</div>
+             </div>
+             <div class='flL'>
+                  <div class='f-nav-ttl'>Phones</div>
+                  <div><a href='http://bluproducts.com/android-phones'>Android</a></div>
+             </div>
+             <div class='flL'>
+                  <div class='f-nav-ttl'>About</div>
+                  <div><a href='http://bluproducts.com/into-blu/blu-news'>News</a></div>
+                
+             </div>
+             <div class='flL'>
+                  <div class='f-nav-ttl'>Contact</div>
+                  <div><a href='http://bluproducts.com/contact-sales'>Sales</a></div>
+                  <div><a href='http://bluproducts.com/contact-location'>Location</a></div>
+             </div>
+             <div class='flL'>
+                  <div class='f-nav-ttl'>Support</div>
+                  <div><a href='http://bluproducts.com/contact-service'>Service</a></div>
+                  <div><a href='http://bluproducts.com/blu-faq'>Faq's</a></div>
+                  <div><a target='_blank' href='http://bluproducts.com/images/US_Limited%20Warranty_BLU_Products.pdf'>Us Warranty</a></div>
+                  <div><a href='http://bluproducts.com/takeback-program'>Take Back Program</a></div>
+                  <div><a href='http://s536785483.onlinehome.us/user-manuals/'>User Manuals</a></div>
+             </div>
+             <div style='clear:both;'></div>    
+       </div>
+       <div class='foot-i-r'>
+            <div class='foot-soc'>
+                 <div class='f-nav-ttl'>Connect With Us</div>
+                 <ul>
+                      <li><a target='_blank' href='https://www.facebook.com/BLU.Products'><img src='images/icon-facebook.jpg' alt='youtube blu'/></a></li>
+                      <li><a target='_blank' href='https://twitter.com/BLU_Products'><img src='images/icon-twitter.jpg' alt='twitter blu'/></a></li>
+                      <li><a target='_blank' href='https://www.instagram.com/blu_products/'><img src='images/icon-instagram.jpg' alt='instagram blu'/></a></li>
+                      <li><a target='_blank' href='https://www.youtube.com/user/BLUProductsGlobal'><img src='images/icon-youtube.jpg' alt='youtube blu'/></a></li>
+                 </ul>
+            </div>
+       </div>
+       <div style='clear:both;'></div>
+       <div class='g-line'>
+            <p role="contentinfo" class="small-print">&copy; BLU products All Rights Reserved </p>          
+            <ul>
+                 <li><a href='http://bluproducts.com/device-privacy'>Privacy Policy</a></li>
+                 <li><a href='http://bluproducts.com/device-privacy'>Terms of Service</a></li>
+            </ul>
+       </div> 
+  </div>
+  <div class='footer-m'>
+      <div class='footer-m-w'>
+           <div onclick='f_nav(this);'>Phones
+               <ul>
+                     <li><a href='http://bluproducts.com/android-phones'>Android</a></li>
+               </ul>  
+                <img src='images/expand-799-400.jpg' alt='footer' />
+           </div> 
+           <div onclick='f_nav(this);'>About
+                <ul>
+                     <li><a href='http://bluproducts.com/into-blu/about-us'>Into BLU</a></li>
+                </ul>  
+                <img src='images/expand-799-400.jpg' alt='footer' /> 
+          </div> 
+          <div onclick='f_nav(this);'>Contact
+                <ul>
+                     <li><a href='http://bluproducts.com/contact-location'>Location</a></li>
+                     <li><a href='http://bluproducts.com/contact-sales'>Contact Sales</a></li>
+                </ul>  
+                <img src='images/expand-799-400.jpg' alt='footer' /> 
+          </div>
+           <div onclick='f_nav(this);'>Support
+                <ul>
+                     <li><a href='http://bluproducts.com/index.php/contact-service'>Service</a></li>
+                     <li><a href='http://bluproducts.com/blu-faq'>Faq's</a></li>
+                     <li><a href='http://bluproducts.com/index.php/contact-service#ajx/index.php/contact-service'>Software Updates</a></li>
+                     <li><a target='_blank' href='http://bluproducts.com/images/US_Limited%20Warranty_BLU_Products.pdf'>Us Warranty</a></li>
+                     <li><a href='http://bluproducts.com/index.php/takeback-program'>Take back program</a></li>
+                     <li><a href='http://s536785483.onlinehome.us/user-manuals/'>User Manuals</a></li>
+                     <li><a href='http://www.bluproducts.com/r1-hd-device/'>R1 HD Device</a></li>
+                </ul> 
+                <img src='images/expand-799-400.jpg' alt='footer' />  
+          </div> 
+          <div onclick='f_nav(this);'>Connect with us
+                <ul>
+                     <li><a target='_blank' href='https://www.facebook.com/BLU.Products'>Facebook</a></li>
+                     <li><a target='_blank' href='https://twitter.com/BLU_Products'>Twitter</a></li>
+                     <li><a target='_blank' href='https://www.instagram.com/blu_products/'>Instagram</a></li>
+                     <li><a target='_blank' href='https://www.youtube.com/user/BLUProductsGlobal'>Youtube</a></li>
+                </ul>
+                <img src='images/expand-799-400.jpg' alt='footer' />   
+          </div> 
+           <div onclick='f_nav(this);'>Policy &amp; Terms
+                <ul>
+                     <li><a href='http://bluproducts.com/device-privacy'>Privacy Policy</a></li>
+                </ul> 
+                <img src='images/expand-799-400.jpg' alt='footer' />  
+          </div>   
+      </div> 
+      <p>&copy; BLU products All Rights Reserved </p> 
+ </div>
+ </footer>
+<div class='compare-one'>
+     <div class='compare-one-i'>
+          <div class='compare-title'>Compare devices</div>
+          <div onclick='Series.closeCX();' class='closeX'>&larr; Back</div>
+          <div class='compare-one-txt'>
+          Compare FIRST  
+          </div> 
+     </div>  
+</div>
+<div class='compare-two'>
+     <div class='compare-two-i'>
+          <div class='compare-two-txt'>
+          Compare Second  
+          </div>    
+     </div>  
+</div>
+
+
+<script>
+;(function() {  
+"use strict";
+var i = 0;
+var sh = window.innerHeight;
+var hd = document.querySelector('header');
+setTimeout(function() {
+  hd.style.transition = 'all 1.75s';
+  hd.style.top = '0';
+},500);
+}());
+    
+</script>   
+<script>
+var position = 0;
+var inc = 25;
+var deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+var menuScroll = function () {
+"use strict";
+ var s = document.querySelector('section');
+ var sw = document.querySelector('.section-w');   
+ var hg = document.querySelector('.home-grid');
+ var hgf = Array.prototype.slice.call(document.querySelectorAll('.home-grid .and-grid'));
+ var y = window.pageYOffset;
+ var b = y - inc;
+ var v = y * .0525;
+ var c = y - v;
+ setTimeout(function() {
+      hg.style.transition = 'all 1.5s';
+      hg.style.marginTop = '0px';
+      hg.style.opacity = '1';
+   },50);
+}
+window.onload = menuScroll;
+</script>
+</body>
+</html>
