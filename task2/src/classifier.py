@@ -1,24 +1,39 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from util import getsoup, preprocess
-
-
-PATH = "../../task3/html/apple/iphone_specs.html"
+from pathlib import Path
 
 
 def main():
-    soup = getsoup(PATH)
+    pos, neg = getpaths()
+    pos = [*map(maphtmltotext, pos)]
+    vectorizer = CountVectorizer()
+    vectorizer.fit_transform(pos)
+
+
+def getpaths() -> ([str], [str]):
+    root = Path("../html")
+    dirs = [d for d in root.iterdir() if d.is_dir()]
+    positives = []
+    negatives = []
+    for folder in dirs:
+        good = Path(str(folder) + "/good")
+        bad = Path(str(folder) + "/bad")
+
+        for f in good.iterdir():
+            if f.is_file() and f.name.endswith(".html"):
+                positives.append(str(f))
+
+        for f in bad.iterdir():
+            if f.is_file() and f.name.endswith(".html"):
+                negatives.append(str(f))
+    return positives, negatives
+
+
+def maphtmltotext(path: str) -> str:
+    soup = getsoup(path)
     pptxt = preprocess(soup)
-    count_vec = CountVectorizer()
-    dict = {}
-    for word in str.split(pptxt, " "):
-        if len(word) > 1:
-            if word not in dict:
-                dict[word] = 0
-            else:
-                dict[word] += 1
-    bag = {word: count for word, count in dict.items() if count > 0}
-    print(count_vec.fit_transform([bag]))
-    print(bag)
+    # return [txt for txt in pptxt.split(' ') if len(txt) > 0]
+    return pptxt
 
 
 if __name__ == '__main__':
