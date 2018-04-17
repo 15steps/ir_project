@@ -1,32 +1,112 @@
 package crawler;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import robots.Agent;
 import robots.Robot;
 
 public class Pagina {
 
-	public Pagina() {
-		
+	private Robot robot;
+	private String link;
+	private String base;
+	private String baseAux;
+	private String path;
+	private Links links;
+	private Document document;
+	
+	public Pagina(String link, String path) {
+		this.link = link;
+		this.path = path;
+		this.base = link.substring(0, link.indexOf(".com") + 4);
+		this.baseAux = this.base.replaceAll("htt(ps|p)://", "");
+		this.robot = new Robot(base + "/robots.txt", path);
+		this.links = new Links();
 	}
 	
+	public void download(){
+		this.robot.download();
+		this.save(this.robot.getSb().toString(), path, this.robot.getName(), "");
+		this.document = downloadAux(link, 0);
+	}
+	
+	public void downloadNivel(int nivel, int seconds){
+		for(int i=0; i<this.links.size(); i++){
+			Link link = this.links.get(i);
+			if(link.getNivel() < nivel){
+				downloadAux(link.getLink(), link.getNivel());
+				System.out.println(link.toString());
+				try {
+					System.out.println("Esperando...");
+					TimeUnit.SECONDS.sleep(seconds);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public Document downloadAux(String link, int nivel){
+		
+		String format = ".html";
+		Document document = null;
+		
+		try {
+			document = Jsoup.connect(link).get();
+			String tag = document.getElementsByTag("title").text().replaceAll("\\s+", "_");
+			int size = 20;
+			tag = tag.length() > size ? tag.substring(0, size) : tag;
+			
+			this.save(document.toString(), path, tag, format);
+			
+			Elements elements = document.select("a[href]");
+			for (Element l : elements) {
+				Link lin = new Link(l, nivel+1);
+				this.links.add(lin, this.base);
+	        }
+			
+		} catch (IOException e) {
+			System.err.println("Erro ao conectar no endereco: "+link+"\n");
+			e.printStackTrace();
+		}
+		
+		return document;
+	}
+	
+	private void save(String document, String path, String name, String format){
+		try {
+			
+			int i = 1;
+			File file = new File(path + name + format);
+			while(file.exists()){
+				file = new File(path + name + "_" + i + format);
+				i++;
+			}
+			
+			if (i > 1){
+				name = name + "_" + i;
+			}
+			
+			FileWriter fileWriter = new FileWriter(path + name + format);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			printWriter.print(document);
+			printWriter.close();
+			fileWriter.close();
+		} catch (IOException e) {
+			System.err.println("Erro ao salvar o arquivo: "+ path + name +"\n");
+			e.printStackTrace();
+		}
+	}
+	
+	/*
 	public void reader(String path, String format){
 		File file = new File(path);
 		if(file.isDirectory()){
@@ -83,76 +163,5 @@ public class Pagina {
 		
 		return list;
 	}
-	
-	public void downloadPage(Links links, String link, String path, String format){
-		
-		String base = link.substring(0, link.indexOf(".com") + 4);
-		String robots = base + "/robots.txt";
-		this.downloadRobot(robots, path, ".txt");
-		
-		try {
-			Document document = Jsoup.connect(link).get();
-			String tag = document.getElementsByTag("title").text().replaceAll("\\s+", "_");
-			int size = 20;
-			tag = tag.length() > size ? tag.substring(0, size) : tag;
-			this.save(document.toString(), path, tag + format);
-			
-			Elements elements = document.select("a[href]");
-			for (Element l : elements) {
-				Link lin = new Link();
-				lin.setElement(l);
-				links.add(lin, base);
-	        }
-			
-		} catch (IOException e) {
-			System.err.println("Erro ao conectar no endereco: "+link+"\n");
-			e.printStackTrace();
-		}
-	}
-	
-	public List<String> downloadRobot(String link, String path, String format){
-		
-		List<String> list = new Vector<String>();
-		StringBuilder sb = new StringBuilder();
-		
-		try{
-			URL url = new URL(link);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Content-Type", "text/txt");
-			conn.connect();
-
-			InputStreamReader inputStream = new InputStreamReader(conn.getInputStream());
-			BufferedReader inStream = new BufferedReader(inputStream);
-			String line;
-			
-			while ((line = inStream.readLine()) != null){
-				sb.append(line);
-				sb.append("\n");
-				list.add(line);
-			}
-			
-			inStream.close();
-		} catch (Exception e){
-			e.printStackTrace();
-		} finally {
-			String name = link.replace('.', '_').replace("_txt", ".txt").replace('/', '|');
-			this.save(sb.toString(), path, name);
-		}
-		
-		return list;
-	}
-
-	public void save(String document, String path, String name){
-		try {
-			FileWriter fileWriter = new FileWriter(path + name);
-			PrintWriter printWriter = new PrintWriter(fileWriter);
-			printWriter.print(document);
-			printWriter.close();
-			fileWriter.close();
-		} catch (IOException e) {
-			System.err.println("Erro ao salvar o arquivo: "+ path + name +"\n");
-			e.printStackTrace();
-		}
-	}
+	/**/
 }

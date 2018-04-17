@@ -8,15 +8,25 @@ public class Link {
 	private String description;
 	private boolean visited;
 	private Element element;
-	
-	public Link(String link, String description, boolean visited, Element element) {
+	private int num;
+	private int nivel;
+
+	public Link(String link, String description, boolean visited, Element element, int num, int nivel) {
 		super();
 		this.link = link;
 		this.description = description;
 		this.visited = visited;
 		this.element = element;
+		this.num = num;
+		this.nivel = nivel;
 	}
 
+	public Link(Element element, int nivel) {
+		super();
+		this.setElement(element);
+		this.nivel = nivel;
+	}
+	
 	public Link() {
 		
 	}
@@ -55,9 +65,26 @@ public class Link {
 		this.description = element.text();
 	}
 	
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
+
+	public int getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(int nivel) {
+		this.nivel = nivel;
+	}
+
 	@Override
 	public String toString() {
-		return "Link [link=" + link + ", description=" + description + ", visited=" + visited + "]";
+		return "Link [link=" + link + ", description=" + description + ", visited=" + visited + ", num=" + num
+				+ ", nivel=" + nivel + "]";
 	}
 	
 }

@@ -54,7 +54,8 @@ public class Links {
 		boolean contains = link.getLink().contains(baseAux);
 		
 		if(!this.setList.contains(link.getLink()) && contains){
-			this.setList.add(link.getLink());;
+			link.setNum(this.linkList.size());
+			this.setList.add(link.getLink());
 			this.linkList.add(link);
 		}
 	}
@@ -62,6 +63,10 @@ public class Links {
 	public Link get(int index){
 		this.atual = index;
 		return this.linkList.get(index);
+	}
+	
+	public int size(){
+		return this.linkList.size();
 	}
 	
 }
