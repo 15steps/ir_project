@@ -1,34 +1,36 @@
 package crawler;
 
-import org.jsoup.nodes.Element;
+import java.util.List;
+
+import wordprocessing.Stopword;
+import wordprocessing.WordProcessing;
 
 public class Link {
 
 	private String link;
 	private String description;
-	private boolean visited;
-	private Element element;
-	private int num;
-	private int nivel;
-
-	public Link(String link, String description, boolean visited, Element element, int num, int nivel) {
-		super();
-		this.link = link;
+	private String base;
+	private String baseAux;
+	private String complemento;
+	private List<String> tokens;
+	
+	public Link(String link, String description){
 		this.description = description;
-		this.visited = visited;
-		this.element = element;
-		this.num = num;
-		this.nivel = nivel;
-	}
-
-	public Link(Element element, int nivel) {
-		super();
-		this.setElement(element);
-		this.nivel = nivel;
+		this.start(link);
 	}
 	
-	public Link() {
+	public void start(String link){
+		this.link = link;
+		int index = link.indexOf(".com") + 4;
+		this.base = link.substring(0, index);
+		int index2 = base.indexOf("://") + 3;
+		this.baseAux = base.substring(index2);
+		this.complemento = link.substring(index);
 		
+		WordProcessing pro = new WordProcessing();
+		Stopword stopword = Stopword.NONE;
+		String texto = this.complemento + " " + this.description;
+		this.tokens = pro.tokens(texto, stopword, true, true, true);
 	}
 
 	public String getLink() {
@@ -47,44 +49,42 @@ public class Link {
 		this.description = description;
 	}
 
-	public boolean isVisited() {
-		return visited;
+	public String getBase() {
+		return base;
 	}
 
-	public void setVisited(boolean visited) {
-		this.visited = visited;
+	public void setBase(String base) {
+		this.base = base;
 	}
 
-	public Element getElement() {
-		return element;
+	public String getBaseAux() {
+		return baseAux;
 	}
 
-	public void setElement(Element element) {
-		this.element = element;
-		this.link = element.attr("abs:href");
-		this.description = element.text();
-	}
-	
-	public int getNum() {
-		return num;
+	public void setBaseAux(String baseAux) {
+		this.baseAux = baseAux;
 	}
 
-	public void setNum(int num) {
-		this.num = num;
+	public String getComplemento() {
+		return complemento;
 	}
 
-	public int getNivel() {
-		return nivel;
+	public void setComplemento(String complemento) {
+		this.complemento = complemento;
 	}
 
-	public void setNivel(int nivel) {
-		this.nivel = nivel;
+	public List<String> getTokens() {
+		return tokens;
+	}
+
+	public void setTokens(List<String> tokens) {
+		this.tokens = tokens;
 	}
 
 	@Override
 	public String toString() {
-		return "Link [link=" + link + ", description=" + description + ", visited=" + visited + ", num=" + num
-				+ ", nivel=" + nivel + "]";
+		return "Link [link=" + link + ", description=" + description + ", base=" + base + ", baseAux=" + baseAux
+				+ ", complemento=" + complemento + ", tokens=" + tokens + "]";
 	}
-	
+
 }

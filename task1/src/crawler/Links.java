@@ -12,7 +12,6 @@ public class Links {
 	private int atual;
 	
 	public Links(List<Link> linkList, Set<String> setList, int atual) {
-		super();
 		this.linkList = linkList;
 		this.setList = setList;
 		this.atual = atual;
@@ -50,14 +49,15 @@ public class Links {
 	
 	public void add(Link link, String base){
 		
-		String baseAux = base.replaceAll("http://", "").replaceAll("https://", "");
-		boolean contains = link.getLink().contains(baseAux);
-		
-		if(!this.setList.contains(link.getLink()) && contains){
-			link.setNum(this.linkList.size());
-			this.setList.add(link.getLink());
-			this.linkList.add(link);
-		}
+//		String baseAux = base.replace("htt(p|ps)://", "");
+//		boolean contains = link.getLink().contains(baseAux);
+//		
+//		if(!this.setList.contains(link.getLink()) && contains){
+//			link.setNum(this.linkList.size());
+//			this.setList.add(link.getLink());
+//			this.linkList.add(link);
+//			System.out.println(link.getLink());
+//		}
 	}
 	
 	public Link get(int index){

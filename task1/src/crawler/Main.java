@@ -2,13 +2,10 @@ package crawler;
 
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
 
 	public static void main(String[] args) {
-		
-		System.out.println("TO-DO WEBCRAWLER");
 		
 		List<String> list = new Vector<String>();
 
@@ -23,24 +20,15 @@ public class Main {
 //		list.add("http://bluproducts.com/android-phones/");
 //		list.add("http://www.htc.com/us/");
 		
+		String path = "test3/";
+		String [] heuristica1 = {"phone", "phones", "galaxy", "cell", "mobile", "device", "smartphone", "smartphones", "iphone"};
 		
-//		try {
-//			int tempo = 0;
-//			TimeUnit.MINUTES.sleep(tempo);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-		
-		String path = "test2/";
-		
-		for(String site : list){
-			Pagina pagina = new Pagina(site, path);
-			pagina.download();
-			System.out.println();
-			
-			pagina.downloadNivel(3, 10);
+		for(String link : list){
+			Pagina pagina = new Pagina(link, heuristica1, path);
+			int segundos = 10;
+			int qtdPaginas = 10;
+			pagina.download(segundos, qtdPaginas);
 		}
-		
 		
 	}
 
