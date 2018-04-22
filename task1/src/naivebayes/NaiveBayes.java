@@ -92,7 +92,7 @@ public class NaiveBayes {
 		return map;
 	}
 
-	public Classe classe(List<String> words){
+	public Classe classify(List<String> words){
 		
 		Map<String, Integer> map = this.frequence(words);
 		double positivo = 0;
@@ -127,7 +127,7 @@ public class NaiveBayes {
 			wordsList.add(word);
 		}
 		
-		return this.classe(wordsList);
+		return this.classify(wordsList);
 	}
 	
 	public void clear(){

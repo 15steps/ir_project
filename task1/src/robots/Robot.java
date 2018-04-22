@@ -7,24 +7,24 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import files.Files;
+
 public class Robot {
 
 	private List<Agent> agent;
 	private List<String> lines;
 	private StringBuilder sb;
 	private String link;
-	private String path;
 	private String name;
+	private String path;
 
 	public Robot(String link, String path) {
-		super();
 		this.link = link;
-		this.path = path;
 		this.sb = new StringBuilder();
-		this.lines = new ArrayList<>();
-		this.agent = new ArrayList<>();
+		this.lines = new ArrayList<String>();
+		this.agent = new ArrayList<Agent>();
+		this.path = path;
 		this.name = link.replaceAll("[^a-zZ-Z0-9]", "-").replaceAll("\\-+", "-").replace("-txt", ".txt");
-//		this.name = link.replace('.', '_').replace("_txt", ".txt").replace('/', '|');
 	}
 
 	public void download(){
@@ -58,12 +58,11 @@ public class Robot {
 		} catch (Exception e){
 			e.printStackTrace();
 		} finally {
-//			String name = link.replace('.', '_').replace("_txt", ".txt").replace('/', '|');
-//			this.save(sb.toString(), path, name);
-			
 			for(String agent : agents){
 				this.genereteRobot(agent);
 			}
+			Files f = new Files();
+			f.save(this.sb.toString(), this.path, this.name, "");
 		}
 	}
 	
@@ -135,20 +134,20 @@ public class Robot {
 		this.link = link;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 }

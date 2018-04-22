@@ -11,9 +11,9 @@ public class WordProcessing {
 		
 	}
 
-	public Map<String, Integer> tokensFrequency(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao){
+	public Map<String, Integer> tokensFrequency(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao, boolean numeros){
 		
-		List<String> tokensList = this.tokens(texto, stopword, acentuacao, pontuacao);
+		List<String> tokensList = this.tokens(texto, stopword, acentuacao, pontuacao, numeros);
 		
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		for(String token : tokensList){
@@ -25,10 +25,10 @@ public class WordProcessing {
 		return map;
 	}
 	
-	public List<String> tokens(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao){
+	public List<String> tokens(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao, boolean numeros){
 		
 		List<String> tokensList = new ArrayList<String>();
-		String wordPro = this.wordProcessing(texto, acentuacao, pontuacao);
+		String wordPro = this.wordProcessing(texto, acentuacao, pontuacao, numeros);
 		String[] tokensArray = wordPro.split("\\s+");
 		
 		for(String token : tokensArray){
@@ -41,7 +41,7 @@ public class WordProcessing {
 		return tokensList;
 	}
 	
-	public String wordProcessing(String texto, boolean acentuacao, boolean pontuacao){
+	public String wordProcessing(String texto, boolean acentuacao, boolean pontuacao, boolean numeros){
 		
 		texto = texto.toLowerCase();
 		if(acentuacao){
@@ -50,26 +50,33 @@ public class WordProcessing {
 		if(pontuacao){
 			texto = this.removerPontuacao(texto);
 		}
+		if(numeros){
+			texto = this.removerNumeros(texto);
+		}
 		
-		return texto;
+		return texto.replaceAll("\\s+", " ").trim();
 	}
 	
 	public String removerStopwords(String token, Stopword stopword){
 		return stopword.getStopwordSet().contains(token) ? "" : token;
 	}
-
-	public String removerAcentos(String palavra) {    
-		palavra = palavra.replaceAll("[aáàãâ]","a");
-		palavra = palavra.replaceAll("[eéèê]","e");
-		palavra = palavra.replaceAll("[iíìî]","i");
-		palavra = palavra.replaceAll("[oóõõô]","o");
-		palavra = palavra.replaceAll("[uúùû]","u");
-		palavra = palavra.replaceAll("ç","c");
-		return palavra;  
+	
+	public String removerNumeros(String palavra){
+		return palavra.replaceAll("[0-9]","");
 	}
 
 	public String removerPontuacao(String palavra){
 		return palavra.replaceAll("[^a-zA-Z0-9]", " ");
+	}
+
+	public String removerAcentos(String palavra) {    
+		palavra = palavra.replaceAll("[áàãâ]","a");
+		palavra = palavra.replaceAll("[éèê]","e");
+		palavra = palavra.replaceAll("[íìî]","i");
+		palavra = palavra.replaceAll("[óõõô]","o");
+		palavra = palavra.replaceAll("[úùû]","u");
+		palavra = palavra.replaceAll("ç","c");
+		return palavra;
 	}
 
 }
