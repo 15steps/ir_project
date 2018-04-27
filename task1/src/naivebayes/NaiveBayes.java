@@ -55,7 +55,7 @@ public class NaiveBayes {
 		}
 	}
 	
-	public double prob(String palavra, Classe classe){
+	private double prob(String palavra, Classe classe){
 		
 		double val = 0;
 		double qtd = 0;
@@ -79,7 +79,7 @@ public class NaiveBayes {
 		return (palavra_classe * classe_total) / total;
 	}
 	
-	public Map<String, Integer> frequence(List<String> words){
+	private Map<String, Integer> frequence(List<String> words){
 		
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		
@@ -136,37 +136,9 @@ public class NaiveBayes {
 		this.positivo = 0;
 		this.negativo = 0;
 	}
-	
-	public Map<String, Palavra> getMapa() {
-		return mapa;
-	}
 
-	public void setMapa(Map<String, Palavra> mapa) {
-		this.mapa = mapa;
-	}
-
-	public double qtdPalavraPositivo(String palavra){
-		return mapa.get(palavra).getPositivo();
-	}
-
-	public double qtdPalavraNegativo(String palavra){
-		return mapa.get(palavra).getNegativo();
-	}
-
-	public double qtdPalavra(String palavra){
+	private double qtdPalavra(String palavra){
 		return mapa.get(palavra).soma();
-	}
-
-	public double getTotal() {
-		return total;
-	}
-
-	public double getPositivo() {
-		return positivo;
-	}
-
-	public double getNegativo() {
-		return negativo;
 	}
 	
 }

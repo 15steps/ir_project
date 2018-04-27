@@ -17,7 +17,7 @@ import naivebayes.Classe;
 import naivebayes.NaiveBayes;
 import robots.Robot;
 
-public class Pagina{
+public class Pagina extends Thread{
 
 	private Robot robot;
 	private Link link;
@@ -25,8 +25,10 @@ public class Pagina{
 	private Set<String> listHeuristica;
 	private String path;
 	private NaiveBayes naiveBayes;
+	private int seconds;
+	private int qtdPagina;
 	
-	public Pagina(String link, String[] heuristica, String path) {
+	public Pagina(String link, String[] heuristica, String path, int seconds, int qtdPagina) {
 		
 		this.link = new Link(link, "");
 		this.listLink = new ArrayList<Link>();
@@ -35,17 +37,18 @@ public class Pagina{
 		this.path = path;
 		this.listHeuristica = new HashSet<String>();
 		for(String s : heuristica){
-			listHeuristica.add(s);
+			this.listHeuristica.add(s);
 		}
 		
 		String linkRobot =  this.link.getBase() + "/robots.txt";
 		this.robot = new Robot(linkRobot, path);
 		this.robot.download();
 		this.naiveBayes = new NaiveBayes();
+		this.qtdPagina = qtdPagina;
+		this.seconds = seconds;
 	}
 	
-	public void download(int seconds, int qtdPagina){
-		
+	public void run(){
 		int size = 20;
 		String format = ".html";
 		Files f = new Files();
@@ -54,13 +57,13 @@ public class Pagina{
 		for(int i=0; i<this.listLink.size(); i++){
 			
 			Link link = this.listLink.get(i);
-			System.out.println(link.toString());
+//			System.out.println(link.toString());
 			
-			if(!this.classifyLinkHeuristica(link)){
+			if(!this.classifyLinkHeuristica(link) && i>0){
 				continue;
 			}
 			
-			if(count > qtdPagina){
+			if(count > this.qtdPagina){
 				continue;
 			}
 			
@@ -73,7 +76,7 @@ public class Pagina{
 			
 			try {
 				System.out.println("Esperando...");
-				TimeUnit.SECONDS.sleep(seconds);
+				TimeUnit.SECONDS.sleep(this.seconds);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -87,8 +90,12 @@ public class Pagina{
 			document = Jsoup.connect(link).header("Content-Type", "text/html").get();
 			Elements elements = document.select("a[href]");
 			for (Element l : elements) {
-				Link link1 = new Link(l.attr("abs:href"), l.text());
-				this.listLink.add(link1);
+				String lin = l.attr("abs:href");
+				if(!lin.matches("\\s*")){
+					Link link1 = new Link(lin, l.text());
+					this.listLink.add(link1);
+				}
+				
 	        }
 		} catch (IOException e) {
 			System.err.println("Erro ao conectar no endereco: "+link+"\n");
@@ -105,18 +112,15 @@ public class Pagina{
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
 	public boolean classifyLinkNaive(Link link){
 		
 		Classe classe = this.naiveBayes.classify(link.getTokens());
-		
 		if(classe.equals(Classe.POSITIVO)){
 			return true;
 		}
-		
 		return false;
 	}
 	

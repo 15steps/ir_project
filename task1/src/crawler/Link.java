@@ -20,6 +20,7 @@ public class Link {
 	}
 	
 	public void start(String link){
+//		System.out.println(link);
 		this.link = link;
 		int index = link.indexOf(".com") + 4;
 		this.base = link.substring(0, index);

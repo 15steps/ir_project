@@ -24,7 +24,7 @@ public class Robot {
 		this.lines = new ArrayList<String>();
 		this.agent = new ArrayList<Agent>();
 		this.path = path;
-		this.name = link.replaceAll("[^a-zZ-Z0-9]", "-").replaceAll("\\-+", "-").replace("-txt", ".txt");
+		this.name = link.replaceAll("[^a-zZ-Z0-9]", "-").replaceAll("\\-+", "-").replace("-txt", "");
 	}
 
 	public void download(){
@@ -62,7 +62,7 @@ public class Robot {
 				this.genereteRobot(agent);
 			}
 			Files f = new Files();
-			f.save(this.sb.toString(), this.path, this.name, "");
+			f.save(this.sb.toString(), this.path, this.name, ".txt");
 		}
 	}
 	

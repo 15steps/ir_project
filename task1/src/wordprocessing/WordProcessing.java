@@ -7,10 +7,6 @@ import java.util.Map;
 
 public class WordProcessing {
 
-	public WordProcessing() {
-		
-	}
-
 	public Map<String, Integer> tokensFrequency(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao, boolean numeros){
 		
 		List<String> tokensList = this.tokens(texto, stopword, acentuacao, pontuacao, numeros);
@@ -57,19 +53,19 @@ public class WordProcessing {
 		return texto.replaceAll("\\s+", " ").trim();
 	}
 	
-	public String removerStopwords(String token, Stopword stopword){
+	private String removerStopwords(String token, Stopword stopword){
 		return stopword.getStopwordSet().contains(token) ? "" : token;
 	}
 	
-	public String removerNumeros(String palavra){
+	private String removerNumeros(String palavra){
 		return palavra.replaceAll("[0-9]","");
 	}
 
-	public String removerPontuacao(String palavra){
+	private String removerPontuacao(String palavra){
 		return palavra.replaceAll("[^a-zA-Z0-9]", " ");
 	}
 
-	public String removerAcentos(String palavra) {    
+	private String removerAcentos(String palavra) {    
 		palavra = palavra.replaceAll("[áàãâ]","a");
 		palavra = palavra.replaceAll("[éèê]","e");
 		palavra = palavra.replaceAll("[íìî]","i");

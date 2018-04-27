@@ -27,7 +27,8 @@ public class NaiveBayesTeste {
 				"search", "ipod", "tablets", "theater", "tvs", "video", "virtual", "computers", "games", "security" ,"support",
 				"tablet", "hdmi", "cable", "computing", "windows", "desktops", "laptops", "audio", "reality", "wearables", 
 				"televisions", "content", "policy", "accessibility", "sustainability", "about", "apps", "printers", "health",
-				"care", "solutions", "safety", "tools", "software", "geek", "voice", "control", "sensors", "alarms"};
+				"care", "solutions", "safety", "tools", "software", "geek", "voice", "control", "sensors", "alarms", "scanners", 
+				"office", "drones", "toys", "collectibles", "cameras"};
 		
 		naiveBayes.train(positivo, Classe.POSITIVO);
 		naiveBayes.train(negativo, Classe.NEGATIVO);
