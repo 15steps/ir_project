@@ -37,7 +37,29 @@ public class WordProcessing {
 		return tokensList;
 	}
 	
-	public String wordProcessing(String texto, boolean acentuacao, boolean pontuacao, boolean numeros){
+	public String wordProcessing(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao, boolean numeros){
+		List<String> tokensList = this.tokens(texto, stopword, acentuacao, pontuacao, numeros);
+		StringBuilder sb = new StringBuilder();
+		for(String token : tokensList){
+			sb.append(token);
+			sb.append(" ");
+		}
+		return sb.toString().trim();
+	}
+	
+	public Map<String, Integer> tokensFrequency(String texto, Stopword stopword){	
+		return this.tokensFrequency(texto, stopword, true, true, true);
+	}
+	
+	public List<String> tokens(String texto, Stopword stopword){
+		return this.tokens(texto, stopword, true, true, true);
+	}
+	
+	public String wordProcessing(String texto, Stopword stopword){
+		return this.wordProcessing(texto, stopword, true, true, true);
+	}
+	
+	private String wordProcessing(String texto, boolean acentuacao, boolean pontuacao, boolean numeros){
 		
 		texto = texto.toLowerCase();
 		if(acentuacao){

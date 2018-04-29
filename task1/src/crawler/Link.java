@@ -13,6 +13,7 @@ public class Link {
 	private String baseAux;
 	private String complemento;
 	private List<String> tokens;
+	private String tokensStr;
 	
 	public Link(String link, String description){
 		this.description = description;
@@ -20,7 +21,6 @@ public class Link {
 	}
 	
 	public void start(String link){
-//		System.out.println(link);
 		this.link = link;
 		int index = link.indexOf(".com") + 4;
 		this.base = link.substring(0, index);
@@ -32,6 +32,7 @@ public class Link {
 		Stopword stopword = Stopword.NONE;
 		String texto = this.complemento + " " + this.description;
 		this.tokens = pro.tokens(texto, stopword, true, true, true);
+		this.tokensStr = pro.wordProcessing(texto, stopword, true, true, true);
 	}
 
 	public String getLink() {
@@ -80,6 +81,14 @@ public class Link {
 
 	public void setTokens(List<String> tokens) {
 		this.tokens = tokens;
+	}
+
+	public String getTokensStr() {
+		return tokensStr;
+	}
+
+	public void setTokensStr(String tokensStr) {
+		this.tokensStr = tokensStr;
 	}
 
 	@Override

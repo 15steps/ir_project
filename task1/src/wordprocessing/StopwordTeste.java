@@ -11,9 +11,9 @@ public class StopwordTeste {
 		
 		Stopword stopword = Stopword.PORTUGUESE;
 		
-		System.out.println(pro.wordProcessing(palavra, true, true, true) + "\n");
+		System.out.println(pro.wordProcessing(palavra, stopword) + "\n");
 		
-		Map<String, Integer> map = pro.tokensFrequency(palavra, stopword, true, true, true);
+		Map<String, Integer> map = pro.tokensFrequency(palavra, stopword);
 		for(String key : map.keySet()){
 			System.out.println(key + "\t" + map.get(key));
 		}

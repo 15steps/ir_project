@@ -16,23 +16,35 @@ import files.Files;
 import naivebayes.Classe;
 import naivebayes.NaiveBayes;
 import robots.Robot;
+import wordprocessing.Stopword;
+import wordprocessing.WordProcessing;
 
 public class Pagina extends Thread{
 
 	private Robot robot;
 	private Link link;
 	private List<Link> listLink;
+	private Set<String> setLink;
 	private Set<String> listHeuristica;
 	private String path;
 	private NaiveBayes naiveBayes;
 	private int seconds;
 	private int qtdPagina;
+	private String regex;
+	private String site;
 	
 	public Pagina(String link, String[] heuristica, String path, int seconds, int qtdPagina) {
 		
+		this.setLink = new HashSet<String>();
 		this.link = new Link(link, "");
+		this.regex = "htt(p|ps)://"+ this.link.getBaseAux() + ".*";
 		this.listLink = new ArrayList<Link>();
 		this.listLink.add(this.link);
+		
+		boolean www = this.link.getBaseAux().startsWith("www.");
+		int beginIndex = www ? 4 : 0;
+		int endIndex = this.link.getBaseAux().length() - 4;
+		this.site = this.link.getBaseAux().substring(beginIndex, endIndex).replace(".", "_");
 		
 		this.path = path;
 		this.listHeuristica = new HashSet<String>();
@@ -49,36 +61,40 @@ public class Pagina extends Thread{
 	}
 	
 	public void run(){
-		int size = 20;
 		String format = ".html";
 		Files f = new Files();
 		int count = 0;
+		WordProcessing pro = new WordProcessing();
+		
+		Stopword stopword = Stopword.NONE;
 		
 		for(int i=0; i<this.listLink.size(); i++){
 			
 			Link link = this.listLink.get(i);
-//			System.out.println(link.toString());
-			
-			if(!this.classifyLinkHeuristica(link) && i>0){
-				continue;
-			}
 			
 			if(count > this.qtdPagina){
-				continue;
+				break;
 			}
 			
 			count++;
 			
 			Document document = this.downloadAux(link.getLink());
-			String name = document.getElementsByTag("title").text().replaceAll("\\s+", "_");
-			name = name.length() > size ? name.substring(0, size) : name;
-			f.save(document.toString(), this.path, name, format);
-			
-			try {
-				System.out.println("Esperando...");
-				TimeUnit.SECONDS.sleep(this.seconds);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			if (document != null){
+				int zeroOrOne = this.classifyLinkHeuristica(link) ? 1 : 0;
+				String linkPro = pro.wordProcessing(link.getComplemento(), stopword);
+				String descPro = pro.wordProcessing(link.getDescription(), stopword);
+				String title = document.getElementsByTag("title").text();
+				int size = 30;
+				title = title.length() > size ? title.substring(0, size) : title;
+				title = pro.wordProcessing(title, stopword);
+				String name = zeroOrOne + "-" + this.site + "-" + linkPro + "-" + descPro + "-" + title;
+				f.save(document.toString(), this.path, name.replaceAll(" ", "_"), format);
+				try {
+//					System.out.println("Esperando...");
+					TimeUnit.SECONDS.sleep(this.seconds);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -87,15 +103,15 @@ public class Pagina extends Thread{
 
 		Document document = null;
 		try {
-			document = Jsoup.connect(link).header("Content-Type", "text/html").get();
+			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(0).get();
 			Elements elements = document.select("a[href]");
 			for (Element l : elements) {
 				String lin = l.attr("abs:href");
-				if(!lin.matches("\\s*")){
+				if(!lin.matches("\\s*") && lin.matches(this.regex) && !setLink.contains(lin)){	
 					Link link1 = new Link(lin, l.text());
 					this.listLink.add(link1);
+					this.setLink.add(lin);
 				}
-				
 	        }
 		} catch (IOException e) {
 			System.err.println("Erro ao conectar no endereco: "+link+"\n");
