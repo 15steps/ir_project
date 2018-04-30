@@ -1,125 +1,143 @@
 package crawler;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import robots.Agent;
+import files.Files;
+import naivebayes.Classe;
+import naivebayes.NaiveBayes;
 import robots.Robot;
+import wordprocessing.Stopword;
+import wordprocessing.WordProcessing;
 
-public class Pagina {
+public class Pagina extends Thread{
+
+	private Robot robot;
+	private Link link;
+	private List<Link> listLink;
+	private Set<String> setLink;
+	private Set<String> listHeuristica;
+	private String path;
+	private NaiveBayes naiveBayes;
+	private int seconds;
+	private int qtdPagina;
+	private String regex;
+	private String site;
 	
-	public void reader(){
-		File file = new File("");
-		if(file.isDirectory()){
-			for(File f : file.listFiles()){
-				if(f.exists() && f.getName().endsWith(".txt")){
-					
-					List<String> list2 = reader(f);
-					
-					Robot r = new Robot();
-					r.genereteRobot(list2, "*");
-					
-					System.out.println(f.getName());
-					for(Agent a : r.getAgent()){
-						System.out.println(a.toString());
-						System.out.println();
-					}
+	public Pagina(String link, String[] heuristica, String path, int seconds, int qtdPagina) {
+		
+		this.setLink = new HashSet<String>();
+		this.link = new Link(link, "");
+		this.regex = "htt(p|ps)://"+ this.link.getBaseAux() + ".*";
+		this.listLink = new ArrayList<Link>();
+		this.listLink.add(this.link);
+		
+		boolean www = this.link.getBaseAux().startsWith("www.");
+		int beginIndex = www ? 4 : 0;
+		int endIndex = this.link.getBaseAux().length() - 4;
+		this.site = this.link.getBaseAux().substring(beginIndex, endIndex).replace(".", "_");
+		
+		this.path = path;
+		this.listHeuristica = new HashSet<String>();
+		for(String s : heuristica){
+			this.listHeuristica.add(s);
+		}
+		
+		String linkRobot =  this.link.getBase() + "/robots.txt";
+		this.robot = new Robot(linkRobot, path);
+		this.robot.download();
+		this.naiveBayes = new NaiveBayes();
+		this.qtdPagina = qtdPagina;
+		this.seconds = seconds;
+	}
+	
+	public void run(){
+		String format = ".html";
+		Files f = new Files();
+		int count = 0;
+		WordProcessing pro = new WordProcessing();
+		
+		Stopword stopword = Stopword.NONE;
+		
+		for(int i=0; i<this.listLink.size(); i++){
+			
+			Link link = this.listLink.get(i);
+			
+			if(count > this.qtdPagina){
+				break;
+			}
+			
+			count++;
+			
+			Document document = this.downloadAux(link.getLink());
+			if (document != null){
+				int zeroOrOne = this.classifyLinkHeuristica(link) ? 1 : 0;
+				String linkPro = pro.wordProcessing(link.getComplemento(), stopword);
+				String descPro = pro.wordProcessing(link.getDescription(), stopword);
+				String title = document.getElementsByTag("title").text();
+				int size = 30;
+				title = title.length() > size ? title.substring(0, size) : title;
+				title = pro.wordProcessing(title, stopword);
+				String name = zeroOrOne + "-" + this.site + "-" + linkPro + "-" + descPro + "-" + title;
+				f.save(document.toString(), this.path, name.replaceAll(" ", "_"), format);
+				try {
+//					System.out.println("Esperando...");
+					TimeUnit.SECONDS.sleep(this.seconds);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		}
 	}
 	
-	public static List<String> reader(File file){
-		List<String> list = new Vector<>();
-		try {
-			FileReader reader = new FileReader(file);
-			BufferedReader br = new BufferedReader(reader);
+	public Document downloadAux(String link){
 
-			String line;
-			while ((line = br.readLine()) != null){
-				list.add(line);
-			}
-			
-			reader.close();
-			br.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-	
-	public void downloadPage(String link, String path, String format){
+		Document document = null;
 		try {
-			Document document = Jsoup.connect(link).get();
-			String tag = document.getElementsByTag("title").text().replaceAll("\\s+", "_");
-			int size = 20;
-			tag = tag.length() > size ? tag.substring(0, size) : tag;
-			save(document.toString(), path, tag + format);
+			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(0).get();
+			Elements elements = document.select("a[href]");
+			for (Element l : elements) {
+				String lin = l.attr("abs:href");
+				if(!lin.matches("\\s*") && lin.matches(this.regex) && !setLink.contains(lin)){	
+					Link link1 = new Link(lin, l.text());
+					this.listLink.add(link1);
+					this.setLink.add(lin);
+				}
+	        }
 		} catch (IOException e) {
 			System.err.println("Erro ao conectar no endereco: "+link+"\n");
 			e.printStackTrace();
 		}
+		
+		return document;
 	}
 	
-	public List<String> downloadRobot(String link, String path, String format){
+	public boolean classifyLinkHeuristica(Link link){
 		
-		List<String> list = new Vector<>();
-		StringBuilder sb = new StringBuilder();
-		
-		try{
-			URL url = new URL(link);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Content-Type", "text/txt");
-			conn.connect();
-
-			InputStreamReader inputStream = new InputStreamReader(conn.getInputStream());
-			BufferedReader inStream = new BufferedReader(inputStream);
-			String line;
-			
-			while ((line = inStream.readLine()) != null){
-				sb.append(line);
-				sb.append("\n");
-				list.add(line);
+		for(String s : link.getTokens()){
+			if(this.listHeuristica.contains(s)){
+				return true;
 			}
-			
-			inStream.close();
-		} catch (Exception e){
-			e.printStackTrace();
-		} finally {
-			String name = link.replace('.', '_').replace("_txt", ".txt").replace('/', '|');
-			save(sb.toString(), path, name);
 		}
+		return false;
+	}
+	
+	public boolean classifyLinkNaive(Link link){
 		
-		return list;
-	}
-
-	public void save(String document, String path, String name){
-		try {
-			FileWriter fileWriter = new FileWriter(path + name);
-			PrintWriter printWriter = new PrintWriter(fileWriter);
-			printWriter.print(document);
-			printWriter.close();
-			fileWriter.close();
-		} catch (IOException e) {
-			System.err.println("Erro ao salvar o arquivo: "+ path + name +"\n");
-			e.printStackTrace();
+		Classe classe = this.naiveBayes.classify(link.getTokens());
+		if(classe.equals(Classe.POSITIVO)){
+			return true;
 		}
+		return false;
 	}
+	
 }
