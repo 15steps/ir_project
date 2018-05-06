@@ -7,7 +7,7 @@ setup(
     package_dir={'': 'src'},
     url='',
     license='',
-    author='wellfelix',
-    author_email='',
-    description=''
+    author='Wellington Felix',
+    author_email='wfmf@cin.ufpe.br',
+    description='Project for the information retrieval class'
 )

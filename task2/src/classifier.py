@@ -1,39 +1,76 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import GaussianNB
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import KFold, train_test_split
+from sklearn.feature_selection import mutual_info_classif
+
+from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm
+from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
+
 from util import getsoup, preprocess
 from pathlib import Path
-from random import shuffle
 import pandas as pd
+from time import time
 
 
 def main():
-    X, y = getdataset()
-    # X, y = shuffledataset(X, y)
+    t0 = time()
+    X, y = getdataset(max_features=1000, rankbyinfogain=True)
+    print('Time taken to build dataset: %0.3fs' % (time() - t0))
+    print('# of Features: %i' % len(X[0]))
+    print('-'*20)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
 
     gnb = GaussianNB()  # Naive Bayes
+    t0 = time()
     gnb.fit(X_train, y_train)
+    print('Naïve Bayes training time: %0.3fs' % (time() - t0))
 
-    dt = DecisionTreeClassifier() # Decision Tree
+    t0 = time()
+    dt = DecisionTreeClassifier()  # Decision Tree
     dt.fit(X_train, y_train)
+    print('Decision Tree training time: %0.3fs' % (time() - t0))
 
-    supportvm = svm.SVC() # SVM
+    t0 = time()
+    supportvm = svm.SVC()  # SVM
     supportvm.fit(X_train, y_train)
+    print('SVM training time: %0.3fs' % (time() - t0))
+
+    t0 = time()
+    logisticclf = LogisticRegression()  # Logistic Regression
+    logisticclf.fit(X_train, y_train)
+    print('Logisitic Regression training time: %0.3fs' % (time() - t0))
+
+    t0 = time()
+    mlp = MLPClassifier(max_iter=500)  # Multilayer perceptron
+    mlp.fit(X_train, y_train)
+    print('MLP training time: %0.3fs' % (time() - t0))
 
     dtpred = dt.predict(X_test)  # decision tree prediction
     nbpred = gnb.predict(X_test)  # naive bayes prediction
-    svmpred = supportvm.predict(X_test) # SVM prediction
+    svmpred = supportvm.predict(X_test)  # SVM prediction
+    logisticpred = logisticclf.predict(X_test)
+    mlppred = mlp.predict(X_test)
 
+    print('-'*20)
     print('Decision Tree')
     print(getstatistics(y_test, dtpred))
-    print('Naive Bayes')
+    print('Naïve Bayes')
     print(getstatistics(y_test, nbpred))
     print('SVM')
     print(getstatistics(y_test, svmpred))
+    print('Logistic')
+    print(getstatistics(y_test, logisticpred))
+    print('MLP')
+    print(getstatistics(y_test, mlppred))
+
+
+# Compute metrics for the classifier using cross-validation
+def computemetrics(clf):
+    return None
 
 
 def getstatistics(actual, predicted):
@@ -48,15 +85,8 @@ def getstatistics(actual, predicted):
     return hits/size * 100, mistakes/size * 100
 
 
-def shuffledataset(X, y):
-    dset = [*zip(X, y)] # array of (document, class)
-    shuffle(dset)
-    [_X, _y] = zip(*dset) # unzips dset
-    return list(_X), list(_y)
-
-
-# TODO Use HashingVectorizer instead of TfidfVectorizer
-def getdataset():
+# TODO Use HashingVectorizer instead of TfidfVectorizer ?
+def getdataset(max_features=None, rankbyinfogain=False):
     (pos, neg) = getpaths()
     positives = [*map(maphtmltotext, pos)]
     negatives = [*map(maphtmltotext, neg)]
@@ -64,15 +94,37 @@ def getdataset():
     documents = positives + negatives
     Y = [1 for _ in range(100)] + [0 for _ in range(100)]
 
+    if rankbyinfogain:
+        featureselection(positives, negatives, Y[:100], Y[100:200])
+
     # savetocsv(documents, Y)
 
-    vectorizer = TfidfVectorizer()
+    if max_features:
+        vectorizer = TfidfVectorizer(stop_words='english', strip_accents='unicode', max_features=max_features)
+    else:
+        vectorizer = TfidfVectorizer(stop_words='english', strip_accents='unicode')
     vectorizer.fit(documents)
 
     X = vectorizer.transform(documents).toarray()
 
     return X, Y
 
+
+def featureselection(x_positives, x_negatives, y_positives, y_negatives):
+    cv1 = CountVectorizer(stop_words='english', min_df=2, analyzer='word', token_pattern=r'[a-zA-Z][a-zA-Z][a-zA-Z]*')
+    x_pos = cv1.fit_transform(x_positives)
+
+    cv2 = CountVectorizer(stop_words='english', min_df=2, analyzer='word', token_pattern=r'\w\w+')
+    x_neg = cv2.fit_transform(x_negatives)
+
+    pos_features = dict(zip(cv1.get_feature_names(), mutual_info_classif(x_pos, y_positives, discrete_features=True)))
+    neg_features = dict(zip(cv2.get_feature_names(), mutual_info_classif(x_neg, y_negatives, discrete_features=True)))
+    print('#'*20)
+    print('Best good features')
+    print(sorted(pos_features, key=pos_features.get, reverse=True)[:1000])
+    print('Best bad features')
+    print(sorted(neg_features, key=neg_features.get, reverse=True)[:1000])
+    print('#'*20)
 
 def savetocsv(docs, y):
     df = pd.DataFrame(data=docs, columns=["page"])

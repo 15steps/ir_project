@@ -31,6 +31,7 @@ def removetags(soup: BeautifulSoup) -> BeautifulSoup:
     :return: Soup with no script and comment tags
     """
     sp = soup.find_all("body")[0];
+    # sp = soup
     scripts = sp.find_all("script")
     for script in scripts:
         script.extract()
