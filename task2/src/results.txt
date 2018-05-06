@@ -48,3 +48,5 @@ Configuration 3:
         - SVM: (66.25%, 33.75%)
         - Logistic: (85.00%, 15.00%)
         - MLP: (82.50%, 17.50%)
+
+# TODO Run feature selection with normalization enabled
