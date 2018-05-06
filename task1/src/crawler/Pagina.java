@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 import files.Files;
 import naivebayes.Classe;
 import naivebayes.NaiveBayes;
+import naivebayes.NaiveBayesResult;
 import robots.Robot;
 import wordprocessing.Stopword;
 import wordprocessing.WordProcessing;
@@ -103,7 +104,7 @@ public class Pagina extends Thread{
 
 		Document document = null;
 		try {
-			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(0).get();
+			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(5).get();
 			Elements elements = document.select("a[href]");
 			for (Element l : elements) {
 				String lin = l.attr("abs:href");
@@ -117,12 +118,10 @@ public class Pagina extends Thread{
 			System.err.println("Erro ao conectar no endereco: "+link+"\n");
 			e.printStackTrace();
 		}
-		
 		return document;
 	}
 	
 	public boolean classifyLinkHeuristica(Link link){
-		
 		for(String s : link.getTokens()){
 			if(this.listHeuristica.contains(s)){
 				return true;
@@ -132,9 +131,8 @@ public class Pagina extends Thread{
 	}
 	
 	public boolean classifyLinkNaive(Link link){
-		
-		Classe classe = this.naiveBayes.classify(link.getTokens());
-		if(classe.equals(Classe.POSITIVO)){
+		NaiveBayesResult result = this.naiveBayes.classify(link.getTokens());
+		if(result.getClasse().equals(Classe.POSITIVO)){
 			return true;
 		}
 		return false;
