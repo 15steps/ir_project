@@ -1,0 +1,50 @@
+Configuration 1:
+    - 60% training data | 40% testing data # No fold
+    - max_features = 1000
+    - rankbyinfogain = False
+    - Timing:
+        - Naïve Bayes training time: 0.002s
+        - Decision Tree training time: 0.012s
+        - SVM training time: 0.014s
+        - Logisitic Regression training time: 0.002s
+        - MLP training time: 1.174s
+    - Precision:
+        - Decision Tree: (82.50%, 17.50%)
+        - Naïve Bayes: (72.50%, 27.50%)
+        - SVM: (66.25%, 33.75%)
+        - Logistic: (77.50%, 22.50%)
+        - MLP: (80.00%, 20.00%)
+
+Configuration 2:
+    - 60% training data | 40% testing data # No fold
+    - max_features = None
+    - rankbyinfogain = False
+    - Timing:
+        - Naïve Bayes training time: 0.036s
+        - Decision Tree training time: 0.057s
+        - SVM training time: 0.335s
+        - Logisitic Regression training time: 0.010s
+        - MLP training time: 13.132s
+    - Precision:
+        - Decision Tree: (83.75%, 16.25%)
+        - Naïve Bayes: (81.25%, 18.75%)
+        - SVM: (62.50%, 37.50%)
+        - Logistic: (76.25%, 23.75%)
+        - MLP: (81.25%, 18.75%)
+
+Configuration 3:
+    - 60% training data | 40% testing data # No fold
+    - max_features = 1000
+    - rankbyinfogain = True
+    - Timing:
+        - Naïve Bayes training time: 0.002s
+        - Decision Tree training time: 0.007s
+        - SVM training time: 0.018s
+        - Logisitic Regression training time: 0.005s
+        - MLP training time: 0.092s
+    - Precision:
+        - Decision Tree: (80.00%, 20.00%)
+        - Naïve Bayes: (77.50%, 22.50%)
+        - SVM: (66.25%, 33.75%)
+        - Logistic: (85.00%, 15.00%)
+        - MLP: (82.50%, 17.50%)
