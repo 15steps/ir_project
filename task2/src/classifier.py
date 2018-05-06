@@ -5,9 +5,13 @@ from sklearn.feature_selection import mutual_info_classif
 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
-from sklearn import svm
+from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
+
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
 
 from util import getsoup, preprocess
 from pathlib import Path
@@ -16,51 +20,41 @@ from time import time
 
 
 def main():
+    _t0 = time()
     t0 = time()
-    X, y = getdataset(rankbyinfogain=True)
+    X, y = getdataset()
     print('Time taken to build dataset: %0.3fs' % (time() - t0))
     print('# of Features: %i' % len(X[0]))
-    print('-'*20)
+    print('-'*50+'\n')
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
 
-    gnb = GaussianNB()  # Naive Bayes
-    t0 = time()
-    gnb.fit(X_train, y_train)
-    print('Naïve Bayes training time: %0.3fs' % (time() - t0))
+    names = ['Naïve Bayes', 'Decision Tree', 'SVM', 'Logistic Regression', 'Multilayer Perceptron']
+    clfs = [
+        GaussianNB(),
+        DecisionTreeClassifier(),
+        SVC(kernel='linear', C=1),
+        LogisticRegression(),
+        MLPClassifier(max_iter=700, alpha=1)
+    ]
 
-    t0 = time()
-    dt = DecisionTreeClassifier()  # Decision Tree
-    dt.fit(X_train, y_train)
-    print('Decision Tree training time: %0.3fs' % (time() - t0))
+    for clf_name, clf in zip(names,clfs):
+        t0 = time()
+        clf.fit(X_train, y_train)
+        ypred = clf.predict(X_test)
+        print(clf_name)
+        print('Training time: {0:0.3f}s'.format((time() - t0)))
+        print('Accuracy: {0:.2%}'.format(clf.score(X_test, y_test)))
+        tn, fp, fn, tp = confusion_matrix(y_test, ypred).ravel()
+        print('Confusion Matrix:')
+        print('\t-\t+')
+        print('-\t{0}\t{1}'.format(tn, fp))
+        print('+\t{0}\t{1}'.format(fn, tp))
+        print('Classification report:')
+        print(classification_report(ypred, y_test))
+        print('-'*50+'\n')
 
-    t0 = time()
-    supportvm = svm.SVC()  # SVM
-    supportvm.fit(X_train, y_train)
-    print('SVM training time: %0.3fs' % (time() - t0))
-
-    t0 = time()
-    logisticclf = LogisticRegression()  # Logistic Regression
-    logisticclf.fit(X_train, y_train)
-    print('Logisitic Regression training time: %0.3fs' % (time() - t0))
-
-    t0 = time()
-    mlp = MLPClassifier(max_iter=500)  # Multilayer perceptron
-    mlp.fit(X_train, y_train)
-    print('MLP training time: %0.3fs' % (time() - t0))
-
-    dtpred = dt.predict(X_test)  # decision tree prediction
-    nbpred = gnb.predict(X_test)  # naive bayes prediction
-    svmpred = supportvm.predict(X_test)  # SVM prediction
-    logisticpred = logisticclf.predict(X_test)
-    mlppred = mlp.predict(X_test)
-
-    print('-'*20)
-    print('Decision Tree: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, dtpred)))
-    print('Naïve Bayes: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, nbpred)))
-    print('SVM: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, svmpred)))
-    print('Logistic: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, logisticpred)))
-    print('MLP: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, mlppred)))
+    print('Total running time: {0:.3f}s'.format(time() - _t0))
 
 
 # Compute metrics for the classifier using cross-validation
@@ -90,7 +84,7 @@ def getdataset(max_feats=None, rankbyinfogain=False):
     Y = [1 for _ in range(100)] + [0 for _ in range(100)]
 
     if rankbyinfogain:
-        X = featureselection(positives, negatives, Y[:100], Y[100:200])
+        X = featureselection(positives, negatives, Y[:100], Y[100:200], normalize=False)
         return X, Y
 
     # savetocsv(documents, Y)
