@@ -17,7 +17,7 @@ from time import time
 
 def main():
     t0 = time()
-    X, y = getdataset(max_features=1000, rankbyinfogain=True)
+    X, y = getdataset(rankbyinfogain=True)
     print('Time taken to build dataset: %0.3fs' % (time() - t0))
     print('# of Features: %i' % len(X[0]))
     print('-'*20)
@@ -56,16 +56,11 @@ def main():
     mlppred = mlp.predict(X_test)
 
     print('-'*20)
-    print('Decision Tree')
-    print(getstatistics(y_test, dtpred))
-    print('Naïve Bayes')
-    print(getstatistics(y_test, nbpred))
-    print('SVM')
-    print(getstatistics(y_test, svmpred))
-    print('Logistic')
-    print(getstatistics(y_test, logisticpred))
-    print('MLP')
-    print(getstatistics(y_test, mlppred))
+    print('Decision Tree: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, dtpred)))
+    print('Naïve Bayes: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, nbpred)))
+    print('SVM: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, svmpred)))
+    print('Logistic: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, logisticpred)))
+    print('MLP: ({0[0]:.2%}, {0[1]:0.2%})'.format(getstatistics(y_test, mlppred)))
 
 
 # Compute metrics for the classifier using cross-validation
@@ -82,11 +77,11 @@ def getstatistics(actual, predicted):
             hits += 1
         else:
             mistakes += 1
-    return hits/size * 100, mistakes/size * 100
+    return hits/size, mistakes/size
 
 
 # TODO Use HashingVectorizer instead of TfidfVectorizer ?
-def getdataset(max_features=None, rankbyinfogain=False):
+def getdataset(max_feats=None, rankbyinfogain=False):
     (pos, neg) = getpaths()
     positives = [*map(maphtmltotext, pos)]
     negatives = [*map(maphtmltotext, neg)]
@@ -95,14 +90,16 @@ def getdataset(max_features=None, rankbyinfogain=False):
     Y = [1 for _ in range(100)] + [0 for _ in range(100)]
 
     if rankbyinfogain:
-        featureselection(positives, negatives, Y[:100], Y[100:200])
+        X = featureselection(positives, negatives, Y[:100], Y[100:200])
+        return X, Y
 
     # savetocsv(documents, Y)
 
-    if max_features:
-        vectorizer = TfidfVectorizer(stop_words='english', strip_accents='unicode', max_features=max_features)
-    else:
-        vectorizer = TfidfVectorizer(stop_words='english', strip_accents='unicode')
+    vectorizer = TfidfVectorizer(
+        stop_words='english',
+        strip_accents='unicode',
+        max_features=max_feats
+    )
     vectorizer.fit(documents)
 
     X = vectorizer.transform(documents).toarray()
@@ -110,7 +107,7 @@ def getdataset(max_features=None, rankbyinfogain=False):
     return X, Y
 
 
-def featureselection(x_positives, x_negatives, y_positives, y_negatives):
+def featureselection(x_positives, x_negatives, y_positives, y_negatives, normalize=False):
     cv1 = CountVectorizer(stop_words='english', min_df=2, analyzer='word', token_pattern=r'[a-zA-Z][a-zA-Z][a-zA-Z]*')
     x_pos = cv1.fit_transform(x_positives)
 
@@ -119,12 +116,23 @@ def featureselection(x_positives, x_negatives, y_positives, y_negatives):
 
     pos_features = dict(zip(cv1.get_feature_names(), mutual_info_classif(x_pos, y_positives, discrete_features=True)))
     neg_features = dict(zip(cv2.get_feature_names(), mutual_info_classif(x_neg, y_negatives, discrete_features=True)))
-    print('#'*20)
-    print('Best good features')
-    print(sorted(pos_features, key=pos_features.get, reverse=True)[:1000])
-    print('Best bad features')
-    print(sorted(neg_features, key=neg_features.get, reverse=True)[:1000])
-    print('#'*20)
+
+    best = sorted(pos_features, key=pos_features.get, reverse=True)[:1000]
+    worst = sorted(neg_features, key=neg_features.get, reverse=True)[:1000]
+    # print('#'*20)
+    # print('Best good features')
+    # print(best)
+    # print('Best bad features')
+    # print(worst)
+    # print('#'*20)
+
+    best_cv = TfidfVectorizer(norm=('l1' if normalize else None))
+    best_cv.fit(best)
+    x = best_cv.transform(x_positives + x_negatives).toarray()
+    print('end of feature selection')
+    print('#'*20,)
+    return x
+
 
 def savetocsv(docs, y):
     df = pd.DataFrame(data=docs, columns=["page"])
