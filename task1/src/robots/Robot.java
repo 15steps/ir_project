@@ -24,12 +24,11 @@ public class Robot {
 		this.lines = new ArrayList<String>();
 		this.agent = new ArrayList<Agent>();
 		this.path = path;
-		this.name = link.replaceAll("[^a-zZ-Z0-9]", "-").replaceAll("\\-+", "-").replace("-txt", "");
+		this.name = link.replaceAll("[^a-zZ-Z0-9]", "_").replaceAll("\\_+", "_").replace("_txt", "");
 	}
-
-	public void download(){
-		
-		List<String> agents = new ArrayList<>();
+	
+	public void start(){
+		List<String> agents = new ArrayList<String>();
 		String userAgent = "User-agent:";
 		
 		try{
@@ -71,6 +70,7 @@ public class Robot {
 		List<String> allowList = new ArrayList<String>();
 		List<String> disallowList = new ArrayList<String>();
 		List<String> sitemapList = new ArrayList<String>();
+		List<ComandAgent> listComandAgent = new ArrayList<ComandAgent>();
 		
 		String allow = "Allow:";
 		String disallow = "Disallow:";
@@ -87,19 +87,34 @@ public class Robot {
 				ast = agentAtual.equals(agent);
 			}else if(ast){
 				if(line.startsWith(allow)){
-					allowList.add(line.substring(allow.length()).trim());
+					String trim = line.substring(allow.length()).trim();
+					allowList.add(trim);
+					listComandAgent.add(new ComandAgent(TComandAgent.ALLOW, this.link.replaceAll("/robots.txt", ""), trim));
 				}else if(line.startsWith(disallow)){
-					disallowList.add(line.substring(disallow.length()).trim());
+					String trim = line.substring(disallow.length()).trim();
+					disallowList.add(trim);
+					listComandAgent.add(new ComandAgent(TComandAgent.DISALLOW, this.link.replaceAll("/robots.txt", ""), trim));
 				}else if(line.startsWith(sitemap)){
-					sitemapList.add(line.substring(sitemap.length()).trim());
+					String trim = line.substring(sitemap.length()).trim();
+					sitemapList.add(trim);
+					listComandAgent.add(new ComandAgent(TComandAgent.SITEMAP, this.link.replaceAll("/robots.txt", ""), trim));
 				}
 			}else{
 				continue;
 			}
 		}
 		
-		Agent agents = new Agent(agent, disallowList, allowList, sitemapList);
+		Agent agents = new Agent(agent, disallowList, allowList, sitemapList, listComandAgent);
 		this.agent.add(agents);
+	}
+	
+	public Agent getAgentByName(String name){
+		for(Agent a : this.agent){
+			if(a.getAgent().equals(name)){
+				return a;
+			}
+		}
+		return null;
 	}
 
 	public List<Agent> getAgent() {
@@ -132,14 +147,6 @@ public class Robot {
 
 	public void setLink(String link) {
 		this.link = link;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getPath() {
