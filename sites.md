@@ -1,5 +1,5 @@
 # Sites
-1. https://bestbuy.com
+1. https://banggood.com
 2. https://store.apple.com/us
 3. https://samsung.com/us/mobile/phones/
 4. https://store.asus.com/us/category/A26208
