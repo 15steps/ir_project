@@ -1,6 +1,6 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import KFold, train_test_split
+from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer
+from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.feature_selection import mutual_info_classif
 
 from sklearn.naive_bayes import GaussianNB
@@ -9,25 +9,22 @@ from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 
 from util import getsoup, preprocess
 from pathlib import Path
-import pandas as pd
 from time import time
 
 
 def main():
     _t0 = time()
     t0 = time()
-    X, y = getdataset()
+    X, y = getdataset(max_feats=1000)
     print('Time taken to build dataset: %0.3fs' % (time() - t0))
     print('# of Features: %i' % len(X[0]))
     print('-'*50+'\n')
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
 
     names = ['Naïve Bayes', 'Decision Tree', 'SVM', 'Logistic Regression', 'Multilayer Perceptron']
     clfs = [
@@ -35,43 +32,33 @@ def main():
         DecisionTreeClassifier(),
         SVC(kernel='linear', C=1),
         LogisticRegression(),
-        MLPClassifier(max_iter=700, alpha=1)
+        MLPClassifier(max_iter=1000, alpha=1)
     ]
 
     for clf_name, clf in zip(names,clfs):
-        t0 = time()
-        clf.fit(X_train, y_train)
-        ypred = clf.predict(X_test)
+        metrics = ['accuracy', 'precision', 'recall']
+        scores = cross_validate(clf, X, y, scoring=metrics, cv=5, return_train_score=False, n_jobs=-1)
+        scores = dict(map(lambda item: (item[0], mean(item[1])), scores.items()))
+
         print(clf_name)
-        print('Training time: {0:0.3f}s'.format((time() - t0)))
-        print('Accuracy: {0:.2%}'.format(clf.score(X_test, y_test)))
-        tn, fp, fn, tp = confusion_matrix(y_test, ypred).ravel()
-        print('Confusion Matrix:')
-        print('\t-\t+')
-        print('-\t{0}\t{1}'.format(tn, fp))
-        print('+\t{0}\t{1}'.format(fn, tp))
-        print('Classification report:')
-        print(classification_report(ypred, y_test))
+        print('fit_time: {0:.3}s'.format(scores['fit_time']))
+        print('accuracy: {0:.2%}'.format(scores['test_accuracy']))
+        print('precision: {0:.3f}'.format(scores['test_precision']))
+        print('recall: {0:.3f}'.format(scores['test_recall']))
+
+        # Confusion Matrix
+        # tn, fp, fn, tp = confusion_matrix(y_test, ypred).ravel()
+        # print('Confusion Matrix:')
+        # print('\t-\t+')
+        # print('-\t{0}\t{1}'.format(tn, fp))
+        # print('+\t{0}\t{1}'.format(fn, tp))
         print('-'*50+'\n')
 
     print('Total running time: {0:.3f}s'.format(time() - _t0))
 
 
-# Compute metrics for the classifier using cross-validation
-def computemetrics(clf):
-    return None
-
-
-def getstatistics(actual, predicted):
-    size = len(actual)
-    mistakes = 0
-    hits = 0
-    for v1, v2 in [*zip(actual, predicted)]:
-        if v1 == v2:
-            hits += 1
-        else:
-            mistakes += 1
-    return hits/size, mistakes/size
+def mean(l):
+    return sum(l)/len(l)
 
 
 # TODO Use HashingVectorizer instead of TfidfVectorizer ?
@@ -84,10 +71,8 @@ def getdataset(max_feats=None, rankbyinfogain=False):
     Y = [1 for _ in range(100)] + [0 for _ in range(100)]
 
     if rankbyinfogain:
-        X = featureselection(positives, negatives, Y[:100], Y[100:200], normalize=False)
+        X = featureselection(positives, negatives, Y[:100], Y[100:200])
         return X, Y
-
-    # savetocsv(documents, Y)
 
     vectorizer = TfidfVectorizer(
         stop_words='english',
@@ -101,7 +86,7 @@ def getdataset(max_feats=None, rankbyinfogain=False):
     return X, Y
 
 
-def featureselection(x_positives, x_negatives, y_positives, y_negatives, normalize=False):
+def featureselection(x_positives, x_negatives, y_positives, y_negatives):
     cv1 = CountVectorizer(stop_words='english', min_df=2, analyzer='word', token_pattern=r'[a-zA-Z][a-zA-Z][a-zA-Z]*')
     x_pos = cv1.fit_transform(x_positives)
 
@@ -113,6 +98,7 @@ def featureselection(x_positives, x_negatives, y_positives, y_negatives, normali
 
     best = sorted(pos_features, key=pos_features.get, reverse=True)[:1000]
     worst = sorted(neg_features, key=neg_features.get, reverse=True)[:1000]
+
     # print('#'*20)
     # print('Best good features')
     # print(best)
@@ -120,17 +106,14 @@ def featureselection(x_positives, x_negatives, y_positives, y_negatives, normali
     # print(worst)
     # print('#'*20)
 
-    best_cv = TfidfVectorizer(norm=('l1' if normalize else None))
+    best_cv = CountVectorizer()
+    # best_cv.fit([*best, *worst])
     best_cv.fit(best)
     x = best_cv.transform(x_positives + x_negatives).toarray()
+
     print('end of feature selection')
     print('#'*20,)
     return x
-
-
-def savetocsv(docs, y):
-    df = pd.DataFrame(data=docs, columns=["page"])
-    df.to_csv('dataset.csv')
 
 
 def getpaths() -> ([str], [str]):
