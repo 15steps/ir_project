@@ -13,10 +13,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import files.Files;
-import naivebayes.Classe;
 import naivebayes.NaiveBayes;
 import naivebayes.NaiveBayesResult;
+import robots.Agent;
+import robots.ComandAgent;
 import robots.Robot;
+import robots.TComandAgent;
 import wordprocessing.Stopword;
 import wordprocessing.WordProcessing;
 
@@ -26,7 +28,6 @@ public class Pagina extends Thread{
 	private Link link;
 	private List<Link> listLink;
 	private Set<String> setLink;
-	private Set<String> listHeuristica;
 	private String path;
 	private NaiveBayes naiveBayes;
 	private int seconds;
@@ -34,7 +35,7 @@ public class Pagina extends Thread{
 	private String regex;
 	private String site;
 	
-	public Pagina(String link, String[] heuristica, String path, int seconds, int qtdPagina) {
+	public Pagina(String link, NaiveBayes naiveBayes, String path, int seconds, int qtdPagina) {
 		
 		this.setLink = new HashSet<String>();
 		this.link = new Link(link, "");
@@ -48,17 +49,14 @@ public class Pagina extends Thread{
 		this.site = this.link.getBaseAux().substring(beginIndex, endIndex).replace(".", "_");
 		
 		this.path = path;
-		this.listHeuristica = new HashSet<String>();
-		for(String s : heuristica){
-			this.listHeuristica.add(s);
-		}
+		this.naiveBayes = naiveBayes;
+		this.qtdPagina = qtdPagina;
+		this.seconds = seconds;
 		
 		String linkRobot =  this.link.getBase() + "/robots.txt";
 		this.robot = new Robot(linkRobot, path);
-		this.robot.download();
-		this.naiveBayes = new NaiveBayes();
-		this.qtdPagina = qtdPagina;
-		this.seconds = seconds;
+		this.robot.start();
+		this.start();
 	}
 	
 	public void run(){
@@ -77,24 +75,28 @@ public class Pagina extends Thread{
 				break;
 			}
 			
-			count++;
-			
-			Document document = this.downloadAux(link.getLink());
-			if (document != null){
-				int zeroOrOne = this.classifyLinkHeuristica(link) ? 1 : 0;
-				String linkPro = pro.wordProcessing(link.getComplemento(), stopword);
-				String descPro = pro.wordProcessing(link.getDescription(), stopword);
-				String title = document.getElementsByTag("title").text();
-				int size = 30;
-				title = title.length() > size ? title.substring(0, size) : title;
-				title = pro.wordProcessing(title, stopword);
-				String name = zeroOrOne + "-" + this.site + "-" + linkPro + "-" + descPro + "-" + title;
-				f.save(document.toString(), this.path, name.replaceAll(" ", "_"), format);
-				try {
-//					System.out.println("Esperando...");
-					TimeUnit.SECONDS.sleep(this.seconds);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			if(this.verifyRobot(link) && this.classifyLinkNaive(link)){
+				
+				Document document = this.downloadAux(link.getLink());
+				if (document != null){
+					int zeroOrOne = this.classifyLinkNaive(link) ? 1 : 0;
+					String linkPro = pro.wordProcessing(link.getComplemento(), stopword);
+					String descPro = pro.wordProcessing(link.getDescription(), stopword);
+					String title = document.getElementsByTag("title").text();
+					int size = 30;
+					title = title.length() > size ? title.substring(0, size) : title;
+					title = pro.wordProcessing(title, stopword);
+					String name = zeroOrOne + "-" + this.site + "-" + linkPro + "-" + descPro + "-" + title;
+					f.save(document.toString(), this.path, name.replaceAll(" ", "_"), format);
+					
+					count++;
+					
+					try {
+//						System.out.println("Esperando...");
+						TimeUnit.SECONDS.sleep(this.seconds);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -104,7 +106,7 @@ public class Pagina extends Thread{
 
 		Document document = null;
 		try {
-			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(5).get();
+			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(20*1000).get();
 			Elements elements = document.select("a[href]");
 			for (Element l : elements) {
 				String lin = l.attr("abs:href");
@@ -121,18 +123,34 @@ public class Pagina extends Thread{
 		return document;
 	}
 	
-	public boolean classifyLinkHeuristica(Link link){
-		for(String s : link.getTokens()){
-			if(this.listHeuristica.contains(s)){
-				return true;
+	public boolean verifyRobot(Link link){
+		
+		boolean retorno = true;
+		
+		Agent agent = this.robot.getAgentByName("*");
+		for(ComandAgent comandAgent : agent.getListComandAgent()){
+			if(comandAgent.getComandAgent().equals(TComandAgent.ALLOW)){
+				if(link.getLink().matches(comandAgent.getRejex())){
+					retorno = true;
+				}
+			}else if(comandAgent.equals(TComandAgent.DISALLOW)){
+				if(link.getLink().matches(comandAgent.getRejex())){
+					retorno = false;
+				}
 			}
 		}
-		return false;
+		
+//		System.out.println(link.getLink() + " - " + retorno);
+		return retorno;
 	}
 	
 	public boolean classifyLinkNaive(Link link){
 		NaiveBayesResult result = this.naiveBayes.classify(link.getTokens());
-		if(result.getClasse().equals(Classe.POSITIVO)){
+//		System.out.println(link.getLink() + " - " + result.toString());
+//		if(result.getClasse().equals(Classe.POSITIVO)){
+//			return true;
+//		}
+		if((result.getPositivo() - result.getNegativo()) >= 0){
 			return true;
 		}
 		return false;

@@ -8,13 +8,14 @@ public class Agent {
 	private List<String> disallow;
 	private List<String> allow;
 	private List<String> sitemap;
+	private List<ComandAgent> listComandAgent;
 	
-	public Agent(String agent, List<String> disallow, List<String> allow, List<String> sitemap) {
-		super();
+	public Agent(String agent, List<String> disallow, List<String> allow, List<String> sitemap, List<ComandAgent> listComandAgent) {
 		this.agent = agent;
 		this.disallow = disallow;
 		this.allow = allow;
 		this.sitemap = sitemap;
+		this.listComandAgent = listComandAgent;
 	}
 	
 	public String getAgent() {
@@ -41,10 +42,17 @@ public class Agent {
 	public void setSitemap(List<String> sitemap) {
 		this.sitemap = sitemap;
 	}
+	public List<ComandAgent> getListComandAgent() {
+		return listComandAgent;
+	}
+	public void setListComandAgent(List<ComandAgent> listComandAgent) {
+		this.listComandAgent = listComandAgent;
+	}
 
 	@Override
 	public String toString() {
-		return "Agent [agent=" + agent + ",\n disallow=" + disallow + ",\n allow=" + allow + ",\n sitemap=" + sitemap + "]";
+		return "Agent [agent=" + agent + ", disallow=" + disallow + ", allow=" + allow + ", sitemap=" + sitemap
+				+ ", listComandAgent=" + listComandAgent + "]";
 	}
 	
 }
