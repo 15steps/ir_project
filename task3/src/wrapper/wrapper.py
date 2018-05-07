@@ -18,6 +18,7 @@ banggood = 'https://www.banggood.com/Bluboo-S3-6_0-Inch-Sharp-FHD-8500mAh-12V2A-
 huawei = 'https://consumer.huawei.com/us/phones/mate-se/specs/'
 oppo = 'https://www.oppo.com/en/smartphone-a83_2018#section-product-specs'
 
+
 def main():
     sites = {
         "samsung": samsung,
@@ -35,7 +36,7 @@ def main():
     }
 
     regexes = {
-        'screen_size': r'(\d\.\d+(\”|\"))|(\d\.\d+-inch)|(\d\.\d+[ ]Inch)',
+        'screen_size': r'(\d\.\d+[\”\"])|(\d\.\d+-inch)|(\d\.\d+[ ]Inch)',
         'camera_res': r'(\d\d|\d\d\.\d+|\d\d)[ \-]?(MP|Megapixel)\s',
         'screen_resolution': r'\d{3,4}[ ]?[x*\-by]+[ ]?\d{3,4}',
         'battery_capacity': r'\d{1,2}[,]?\d{3}[ ]?mAh',
