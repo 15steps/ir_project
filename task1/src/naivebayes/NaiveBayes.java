@@ -92,7 +92,7 @@ public class NaiveBayes {
 		return map;
 	}
 
-	public Classe classify(List<String> words){
+	public NaiveBayesResult classify(List<String> words){
 		
 		Map<String, Integer> map = this.frequence(words);
 		double positivo = 0;
@@ -108,19 +108,19 @@ public class NaiveBayes {
 			}
 		}
 		
-		System.out.println("Positivo " + positivo);
-		System.out.println("Negativo " + negativo);
-		
+		Classe classe;
 		if(positivo > negativo){
-			return Classe.POSITIVO;
+			classe = Classe.POSITIVO;
 		}else if (negativo > positivo){
-			return Classe.NEGATIVO;
+			classe = Classe.NEGATIVO;
 		}else{
-			return Classe.NEUTRO;
+			classe = Classe.NEUTRO;
 		}
+		
+		return new NaiveBayesResult(classe, positivo, negativo);
 	}
 	
-	public Classe classify(String ... words){
+	public NaiveBayesResult classify(String ... words){
 		
 		List<String> wordsList = new ArrayList<String>();
 		for(String word : words){
