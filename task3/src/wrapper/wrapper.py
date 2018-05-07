@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup, Tag
 import requests
 import re
-
+from time import time
 
 samsung = 'https://www.samsung.com/us/mobile/phones/galaxy-note/' \
           'galaxy-note8-64gb-unlocked-deepsea-blue-sm-n950uzbaxaa/'  # working well
@@ -15,7 +15,8 @@ blu = 'http://bluproducts.com/devices/vivo-xl3-plus/'
 htc = 'https://www.htc.com/us/smartphones/htc-u11/#!color=red'
 banggood = 'https://www.banggood.com/Bluboo-S3-6_0-Inch-Sharp-FHD-8500mAh-12V2A-NFC-' \
            '4GB-RAM-64GB-ROM-MTK6750T-1_5GHz-4G-Smartphone-p-1283089.html?rmmds=category&cur_warehouse=HK'
-
+huawei = 'https://consumer.huawei.com/us/phones/mate-se/specs/'
+oppo = 'https://www.oppo.com/en/smartphone-a83_2018#section-product-specs'
 
 def main():
     sites = {
@@ -28,27 +29,37 @@ def main():
         "moto": moto,
         "blu": blu,
         "htc": htc,
-        "banggood": banggood
+        "banggood": banggood,
+        "huawei": huawei,  # Extra
+        "oppo": oppo  # Extra
     }
 
     regexes = {
         'screen_size': r'(\d\.\d+(\”|\"))|(\d\.\d+-inch)|(\d\.\d+[ ]Inch)',
-        'camera_res': r'(\d\d|\d\d\.\d+|\d\d[ ])(MP|Megapixels)',
+        'camera_res': r'(\d\d|\d\d\.\d+|\d\d)[ \-]?(MP|Megapixel)\s',
         'screen_resolution': r'\d{3,4}[ ]?[x*\-by]+[ ]?\d{3,4}',
-        'battery_capacity': r'\d{1,2}[,]?\d{3}[ ]?mah',
+        'battery_capacity': r'\d{1,2}[,]?\d{3}[ ]?mAh',
         'ram': r'\s\d[ ]?GB',
         'internal_memory': r'\d{2,3}[ ]?GB',
         'processor_speed': r'\d\.\d{1,2}[ ]?(Ghz|GHz)',
         'weight': r'\d?\.?\d{2,3}[ ]?(oz|g)'
     }
 
+    _t0 = time()
+    acc_time = []
+
     for site_name, url in sites.items():
+        t0 = time()
         print(site_name)
         specs = specsection(url, verbose=(True if site_name == '' else False))
 
         for spec_name, rx in regexes.items():
             print('{0}: {1}'.format(spec_name, getspec(specs, rx)))
         print('*' * 50)
+        acc_time.append(time() - t0)
+
+    print('Total time: {0:.3f}s'.format(time() - _t0))
+    print('Average extraction time: {0: .3f}s'.format(sum(acc_time)/len(acc_time)))
 
 
 def getspec(txt: str, rx):
@@ -77,7 +88,7 @@ def specsection(url: str, verbose=False):
 
 
 def find_specs(tag: Tag):
-    rx = re.compile(r'.*spec.*')
+    rx = re.compile(r'.*(spec|feature).*')
     for attr, val in tag.attrs.items():
         if rx.search(str(val)):
             return True
