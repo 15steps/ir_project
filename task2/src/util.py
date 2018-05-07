@@ -18,23 +18,27 @@ def getalltext(soup: BeautifulSoup) -> object:
     :param soup: Beautifulsoup document
     :return: Text without HTML tags
     """
-    if isinstance(soup, NavigableString):
-        return str(soup)
-    txt = ''.join(soup.find_all(text=True))
-    return re.sub(r'[\n\t\r\,]', ' ', txt)
+    # if isinstance(soup, NavigableString):
+    #     return str(soup)
+    # txt = ''.join(soup.find_all(text=True))
+    # body = soup.find('body').getText()
+    # title = soup.find('title').getText()
+    # return re.sub(r'[\n\t\r\,]', ' ', body + title)
+    return re.sub(r'[\n\t\r\,]', ' ', soup.getText())
 
 
-def removetags(soup: BeautifulSoup) -> BeautifulSoup:
+def removetags(sp: BeautifulSoup) -> BeautifulSoup:
     """
     Removes tags not useful for us such as
     the script and comment tags
     :return: Soup with no script and comment tags
     """
-    sp = soup.find_all("body")[0];
-    # sp = soup
     scripts = sp.find_all("script")
-    for script in scripts:
-        script.extract()
+    styles = sp.find_all("style")
+    noscript = sp.find_all("noscript")
+
+    for tag in [*scripts, *styles, *noscript]:
+        tag.extract()
     return sp
 
 
