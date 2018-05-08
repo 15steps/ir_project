@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /cart
+Disallow: /checkout
+Disallow: /shipping
+Disallow: /shipping-edit
+Disallow: /payment
+Disallow: /payment-edit
+Disallow: /review
+Disallow: /create-order
+Disallow: /thankyou
+Disallow: /search
+User-agent: Googlebot
+Disallow:
+User-agent: Googlebot-image
+Disallow:
+
+Sitemap: https://www.motorola.com/sitemap.xml
