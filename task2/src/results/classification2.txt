@@ -1,0 +1,87 @@
+Configuration:
+    - Peso: true
+    - Train: false
+
+Building dataset...
+end of feature selection
+####################
+Fitting Naïve Bayes classifier...
+--- Classification job started ---
+****************************************************************************************************
+Predicting results...
+MLP Confusion Matrix:
+	-	+
+-	0	0
++	4854	986
+
+
+
+Accuracy: 16.88%
+Precision: 1.00
+Recall: 0.17
+Total running time fo prediction: 165.51s
+****************************************************************************************************
+Fitting Decision Tree classifier...
+--- Classification job started ---
+****************************************************************************************************
+Predicting results...
+MLP Confusion Matrix:
+	-	+
+-	0	0
++	5001	839
+
+
+
+Accuracy: 14.37%
+Precision: 1.00
+Recall: 0.14
+Total running time fo prediction: 154.20s
+****************************************************************************************************
+Fitting SVM classifier...
+--- Classification job started ---
+****************************************************************************************************
+Predicting results...
+MLP Confusion Matrix:
+	-	+
+-	0	0
++	5085	755
+
+
+
+Accuracy: 12.93%
+Precision: 1.00
+Recall: 0.13
+Total running time fo prediction: 160.58s
+****************************************************************************************************
+Fitting Logistic Regression classifier...
+--- Classification job started ---
+****************************************************************************************************
+Predicting results...
+MLP Confusion Matrix:
+	-	+
+-	0	0
++	4516	1324
+
+
+
+Accuracy: 22.67%
+Precision: 1.00
+Recall: 0.23
+Total running time fo prediction: 162.49s
+****************************************************************************************************
+Fitting Multilayer Perceptron classifier...
+--- Classification job started ---
+****************************************************************************************************
+Predicting results...
+MLP Confusion Matrix:
+	-	+
+-	0	0
++	5224	616
+
+
+
+Accuracy: 10.55%
+Precision: 1.00
+Recall: 0.11
+Total running time fo prediction: 128.97s
+****************************************************************************************************

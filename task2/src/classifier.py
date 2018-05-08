@@ -9,24 +9,21 @@ from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 
-from sklearn.metrics import confusion_matrix
-
 from util import getsoup, preprocess
 from pathlib import Path
 from time import time
 
-
 def main():
     _t0 = time()
     t0 = time()
-    X, y = getdataset(max_feats=1000)
+    X, y, vec = getdataset(rankbyinfogain=True)
     print('Time taken to build dataset: %0.3fs' % (time() - t0))
     print('# of Features: %i' % len(X[0]))
     print('-'*50+'\n')
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
+    # names = ['Naïve Bayes', 'Decision Tree', 'SVM', 'Logistic Regression', 'Multilayer Perceptron']
 
-    names = ['Naïve Bayes', 'Decision Tree', 'SVM', 'Logistic Regression', 'Multilayer Perceptron']
     clfs = [
         GaussianNB(),
         DecisionTreeClassifier(),
@@ -71,8 +68,8 @@ def getdataset(max_feats=None, rankbyinfogain=False):
     Y = [1 for _ in range(100)] + [0 for _ in range(100)]
 
     if rankbyinfogain:
-        X = featureselection(positives, negatives, Y[:100], Y[100:200])
-        return X, Y
+        X, vec = featureselection(positives, negatives, Y[:100], Y[100:200])
+        return X, Y, vec
 
     vectorizer = TfidfVectorizer(
         stop_words='english',
@@ -83,7 +80,7 @@ def getdataset(max_feats=None, rankbyinfogain=False):
 
     X = vectorizer.transform(documents).toarray()
 
-    return X, Y
+    return X, Y, vectorizer
 
 
 def featureselection(x_positives, x_negatives, y_positives, y_negatives):
@@ -113,7 +110,7 @@ def featureselection(x_positives, x_negatives, y_positives, y_negatives):
 
     print('end of feature selection')
     print('#'*20,)
-    return x
+    return x, best_cv
 
 
 def getpaths() -> ([str], [str]):
