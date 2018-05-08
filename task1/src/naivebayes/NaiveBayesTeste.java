@@ -28,10 +28,18 @@ public class NaiveBayesTeste {
 				"tablet", "hdmi", "cable", "computing", "windows", "desktops", "laptops", "audio", "reality", "wearables", 
 				"televisions", "content", "policy", "accessibility", "sustainability", "about", "apps", "printers", "health",
 				"care", "solutions", "safety", "tools", "software", "geek", "voice", "control", "sensors", "alarms", "scanners", 
-				"office", "drones", "toys", "collectibles", "cameras"};
+				"office", "drones", "toys", "collectibles", "cameras", "user", "myaccount"};
+		
 		
 		naiveBayes.train(positivo, Classe.POSITIVO);
 		naiveBayes.train(negativo, Classe.NEGATIVO);
+		
+		Link linkEx = new Link("http://store.asus.com/us/category/A26208", "Phones");
+		NaiveBayesResult result = naiveBayes.classify(linkEx.getAllTokens());
+		System.out.println(result);
+		
+		NaiveBayesResult result2 = naiveBayes.classify(linkEx.getAllTokens2());
+		System.out.println(result2);
 		
 		//*
 		Files f = new Files();
@@ -40,10 +48,9 @@ public class NaiveBayesTeste {
 			Link link = new Link(url, "");
 			
 			System.out.println(url);
-			System.out.println(naiveBayes.classify(link.getTokens()));
-			System.out.println(link.getTokens());
+			System.out.println(naiveBayes.classify(link.getAllTokens()));
+			System.out.println(link.getAllTokens());
 			System.out.println();
-
 		}
 		/**/
 	}

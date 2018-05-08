@@ -12,6 +12,9 @@ public class ComandAgent{
 		this.path = path;
 		this.base = base;
 		String rejex = base + path.replaceAll("\\*", ".*");
+		rejex = rejex.replaceAll("\\?", "\\\\?");
+		rejex = rejex.replaceAll("http:", "htt(p|ps):");
+		rejex = rejex.replaceAll("https:", "htt(p|ps):");
 		this.rejex = rejex.endsWith(".*") ? rejex : (rejex + ".*");
 	}
 	

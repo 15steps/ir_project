@@ -27,6 +27,32 @@ public class Robot {
 		this.name = link.replaceAll("[^a-zZ-Z0-9]", "_").replaceAll("\\_+", "_").replace("_txt", "");
 	}
 	
+	public Robot(String link, String path, boolean save){
+		this.sb = new StringBuilder();
+		this.lines = new ArrayList<String>();
+		this.agent = new ArrayList<Agent>();
+		this.link = link;
+		
+		Files files = new Files();
+		List<String> agents = new ArrayList<String>();
+		String userAgent = "User-agent:";
+		
+		for(String line : files.reader(path)){
+			this.sb.append(line);
+			this.sb.append("\n");
+			this.lines.add(line);
+			
+			if(line.startsWith(userAgent)){
+				String agentAtual = line.substring(userAgent.length()).trim();
+				agents.add(agentAtual);
+			}
+		}
+		
+		for(String agent : agents){
+			this.genereteRobot(agent);
+		}
+	}
+	
 	public void start(){
 		List<String> agents = new ArrayList<String>();
 		String userAgent = "User-agent:";
@@ -79,7 +105,7 @@ public class Robot {
 		
 		boolean ast = false;
 		
-		for(String line : lines){
+		for(String line : this.lines){
 			if(line.startsWith("#")){
 				continue;
 			}else if(line.startsWith(userAgent)){

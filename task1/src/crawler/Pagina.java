@@ -13,6 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import files.Files;
+import naivebayes.Classe;
 import naivebayes.NaiveBayes;
 import naivebayes.NaiveBayesResult;
 import robots.Agent;
@@ -34,11 +35,17 @@ public class Pagina extends Thread{
 	private int qtdPagina;
 	private String regex;
 	private String site;
+	private boolean peso;
+	private int timeout;
+	private boolean train;
 	
-	public Pagina(String link, NaiveBayes naiveBayes, String path, int seconds, int qtdPagina) {
+	public Pagina(Link link, NaiveBayes naiveBayes, Robot robot, String path, boolean peso, boolean train, int seconds, int qtdPagina, int timeout) {
 		
 		this.setLink = new HashSet<String>();
-		this.link = new Link(link, "");
+		this.link = link;
+		this.peso = peso;
+		this.train = train;
+		this.timeout = timeout;
 		this.regex = "htt(p|ps)://"+ this.link.getBaseAux() + ".*";
 		this.listLink = new ArrayList<Link>();
 		this.listLink.add(this.link);
@@ -52,11 +59,7 @@ public class Pagina extends Thread{
 		this.naiveBayes = naiveBayes;
 		this.qtdPagina = qtdPagina;
 		this.seconds = seconds;
-		
-		String linkRobot =  this.link.getBase() + "/robots.txt";
-		this.robot = new Robot(linkRobot, path);
-		this.robot.start();
-		this.start();
+		this.robot = robot;
 	}
 	
 	public void run(){
@@ -75,11 +78,25 @@ public class Pagina extends Thread{
 				break;
 			}
 			
-			if(this.verifyRobot(link) && this.classifyLinkNaive(link)){
-				
+			//classificar o link para ver se faz ou nao o download
+			boolean download = this.classifyLinkNaive(link, this.peso);
+			
+			//verifica se o link passa pelo robots.txt
+			boolean robots = this.verifyRobot(link);
+			
+			//treinar durante a execucao
+			if(this.train){
+				List<String> tokens = this.peso ? link.getAllTokens2() : link.getAllTokens();
+				Classe classe = download ? Classe.POSITIVO : Classe.NEGATIVO;
+				this.naiveBayes.train(tokens, classe);
+			}
+			
+			//se as condicoes forem verdadeiras, faz o download da pagina
+			if(robots && download){
+				System.out.println(link);
 				Document document = this.downloadAux(link.getLink());
 				if (document != null){
-					int zeroOrOne = this.classifyLinkNaive(link) ? 1 : 0;
+					int zeroOrOne = this.classifyLinkNaive(link, this.peso) ? 1 : 0;
 					String linkPro = pro.wordProcessing(link.getComplemento(), stopword);
 					String descPro = pro.wordProcessing(link.getDescription(), stopword);
 					String title = document.getElementsByTag("title").text();
@@ -92,7 +109,6 @@ public class Pagina extends Thread{
 					count++;
 					
 					try {
-//						System.out.println("Esperando...");
 						TimeUnit.SECONDS.sleep(this.seconds);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -106,7 +122,7 @@ public class Pagina extends Thread{
 
 		Document document = null;
 		try {
-			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(20*1000).get();
+			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(timeout*1000).get();
 			Elements elements = document.select("a[href]");
 			for (Element l : elements) {
 				String lin = l.attr("abs:href");
@@ -127,32 +143,29 @@ public class Pagina extends Thread{
 		
 		boolean retorno = true;
 		
-		Agent agent = this.robot.getAgentByName("*");
+		Agent agent = robot.getAgentByName("*");
 		for(ComandAgent comandAgent : agent.getListComandAgent()){
 			if(comandAgent.getComandAgent().equals(TComandAgent.ALLOW)){
 				if(link.getLink().matches(comandAgent.getRejex())){
 					retorno = true;
 				}
-			}else if(comandAgent.equals(TComandAgent.DISALLOW)){
+			}else if(comandAgent.getComandAgent().equals(TComandAgent.DISALLOW)){
 				if(link.getLink().matches(comandAgent.getRejex())){
 					retorno = false;
 				}
 			}
 		}
-		
-//		System.out.println(link.getLink() + " - " + retorno);
 		return retorno;
 	}
 	
-	public boolean classifyLinkNaive(Link link){
-		NaiveBayesResult result = this.naiveBayes.classify(link.getTokens());
-//		System.out.println(link.getLink() + " - " + result.toString());
-//		if(result.getClasse().equals(Classe.POSITIVO)){
-//			return true;
-//		}
-		if((result.getPositivo() - result.getNegativo()) >= 0){
+	public boolean classifyLinkNaive(Link link, boolean peso){
+		
+		List<String> tokens = peso ? link.getAllTokens2() : link.getAllTokens();
+		NaiveBayesResult result = this.naiveBayes.classify(tokens);
+		if((result.getPositivo() - result.getNegativo()) > 0){
 			return true;
 		}
+		
 		return false;
 	}
 	
