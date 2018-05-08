@@ -40,7 +40,7 @@ public class Main {
 		listRobots.add("htc.txt");
 		listRobots.add("banggood.txt");
 		
-		String path = "files2/";
+		String path = "files_new/";
 		
 		List<String> listPaths = new ArrayList<String>();
 		listPaths.add(path + "apple/");
