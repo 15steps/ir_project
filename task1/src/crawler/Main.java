@@ -93,9 +93,7 @@ public class Main {
 			}
 		}
 		
-		String pathRobot = "files2/robots/";
-		
-//		System.out.println(naiveBayes.classify(pro.tokens("https://www.banggood.com/Wholesale-Smartphones-c-1567.html SMARTPHONE", stopword)));
+		String pathRobot = "files_new/robots/";
 		
 		//parametros
 		int segundos = 10;
