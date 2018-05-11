@@ -7,24 +7,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
+import java.util.Set;
 
 public class Files {
 	
 	public void save(String document, String path, String name, String format){
 		try {
-			int i = 1;
-			File file = new File(path + name + format);
-			while(file.exists()){
-				file = new File(path + name + "_" + i + format);
-				i++;
-			}
-			
-			if (i > 1){
-				name = name + "_" + i;
-			}
-			
 			FileWriter fileWriter = new FileWriter(path + name + format);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 			printWriter.print(document);
@@ -51,7 +42,7 @@ public class Files {
 	
 	public List<String> reader(String path){
 		File file = new File(path);
-		List<String> list = new Vector<String>();
+		List<String> list = new ArrayList<String>();
 		try {
 			FileReader reader = new FileReader(file);
 			BufferedReader br = new BufferedReader(reader);

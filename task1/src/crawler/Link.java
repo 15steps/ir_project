@@ -6,7 +6,7 @@ import java.util.List;
 import wordprocessing.Stopword;
 import wordprocessing.WordProcessing;
 
-public class Link {
+public class Link implements Comparable {
 
 	private String link;
 	private String description;
@@ -15,6 +15,7 @@ public class Link {
 	private String complemento;
 	private List<String> tokensComplemento;
 	private List<String> tokensDescription;
+	private double prob;
 	
 	public Link(String link, String description){
 		
@@ -88,6 +89,15 @@ public class Link {
 		this.tokensDescription = tokensDescription;
 	}
 	
+	
+	public double getProb() {
+		return prob;
+	}
+
+	public void setProb(double prob) {
+		this.prob = prob;
+	}
+
 	public List<String> getAllTokens(){
 		List<String> tokens = new ArrayList<String>();
 		tokens.addAll(tokensComplemento);
@@ -107,6 +117,17 @@ public class Link {
 	public String toString() {
 		return "Link [link=" + link + ", description=" + description + ", base=" + base + ", baseAux=" + baseAux
 				+ ", complemento=" + complemento + ", tokens=" + tokensComplemento + "]";
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		if (this.prob > ((Link) o).prob){
+			return -1;
+		}
+		if (this.prob < ((Link) o).prob){
+			return 1;
+		}
+		return 0;
 	}
 
 }

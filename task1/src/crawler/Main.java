@@ -18,15 +18,15 @@ public class Main {
 		
 		List<String> listLinks = new ArrayList<String>();
 		listLinks.add("https://www.apple.com/iphone/");
-		listLinks.add("https://www.samsung.com/us/mobile/phones/");
-		listLinks.add("https://store.asus.com/us/category/A26208");
-		listLinks.add("https://www.lg.com/us/cell-phones");
-		listLinks.add("https://www.mi.com/en/list/");
-		listLinks.add("https://www.motorola.com/us/products/moto-smartphones");
-		listLinks.add("https://www.sonymobile.com/us/products/phones/");
-		listLinks.add("http://bluproducts.com/android-phones/");
-		listLinks.add("http://www.htc.com/us/");
-		listLinks.add("https://www.banggood.com/Wholesale-Smartphones-c-1567.html");
+//		listLinks.add("https://www.samsung.com/us/mobile/phones/");
+//		listLinks.add("https://www.asus.com/us/Phone/");
+//		listLinks.add("https://www.lg.com/us/cell-phones");
+//		listLinks.add("https://www.mi.com/en/list/");
+//		listLinks.add("https://www.motorola.com/us/products/moto-smartphones");
+//		listLinks.add("https://www.sonymobile.com/us/products/phones/");
+//		listLinks.add("http://bluproducts.com/android-phones/");
+//		listLinks.add("http://www.htc.com/us/");
+//		listLinks.add("https://www.banggood.com/Wholesale-Smartphones-c-1567.html");
 		
 		List<String> listRobots = new Vector<String>();
 		listRobots.add("apple.txt");
@@ -40,7 +40,7 @@ public class Main {
 		listRobots.add("htc.txt");
 		listRobots.add("banggood.txt");
 		
-		String path = "files_new/";
+		String path = "files_heuristica/";
 		
 		List<String> listPaths = new ArrayList<String>();
 		listPaths.add(path + "apple/");
@@ -52,7 +52,7 @@ public class Main {
 		listPaths.add(path + "sony/");
 		listPaths.add(path + "blu/");
 		listPaths.add(path + "htc/");
-		listPaths.add(path + "bangood/");
+		listPaths.add(path + "banggood/");
 		
 		NaiveBayes naiveBayes = new NaiveBayes();
 		
@@ -93,20 +93,21 @@ public class Main {
 			}
 		}
 		
-		String pathRobot = "files_new/robots/";
+		String pathRobot = "robots/";
 		
 		//parametros
-		int segundos = 10;
-		int qtdPaginas = 1000;
+		int segundos = 6;
+		int qtdPaginas = 10;
 		int timeout = 25; //em segundos
 		boolean peso = false; //true, maior peso para a informacao da ancora
 		boolean train = false; //treinar para todo link verificado
+		boolean heuristica = true; //se vai ou nao usar a heuristica, ou só busca em largura
 		
 		for(int i=0; i<listLinks.size(); i++){
 			Link link = new Link(listLinks.get(i), "SMARTPHONE");
 			Robot robot = new Robot(link.getBase(), (pathRobot + listRobots.get(i)), false);
 			
-			Pagina pagina = new Pagina(link, naiveBayes, robot, listPaths.get(i), peso, train, segundos, qtdPaginas, timeout);
+			Pagina pagina = new Pagina(link, naiveBayes, robot, listPaths.get(i), peso, train, heuristica, segundos, qtdPaginas, timeout);
 			pagina.start();
 		}
 		
