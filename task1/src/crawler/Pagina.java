@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -21,8 +22,6 @@ import robots.Agent;
 import robots.ComandAgent;
 import robots.Robot;
 import robots.TComandAgent;
-import wordprocessing.Stopword;
-import wordprocessing.WordProcessing;
 
 public class Pagina extends Thread{
 
@@ -33,196 +32,288 @@ public class Pagina extends Thread{
 	private String path;
 	private NaiveBayes naiveBayes;
 	private String regex;
-	private String site;
 	private boolean peso;
-	private boolean heuristica;
+	private double limiar;
 	private boolean train;
-	private double count;
 	private double countDownloaded;
-	private int mod = 10;
 	private int timeout;
 	private int seconds;
 	private int qtdPagina;
 	private int num;
 	private String name;
 	private StringBuilder sb;
-	
-	
-	public Pagina(Link link, NaiveBayes naiveBayes, Robot robot, String path, boolean peso, boolean train, boolean heuristica, int seconds, int qtdPagina, int timeout) {
-		this.sb = new StringBuilder();
+	private Files files;
+	private boolean isNaiveBayes;
+		
+	/**
+	 * Construtor para heuristica usando NaiveBayes
+	 * @param link
+	 * @param robot
+	 * @param path
+	 * @param seconds
+	 * @param qtdPagina
+	 * @param timeout
+	 * @param naiveBayes
+	 * @param peso
+	 * @param train
+	 */
+	public Pagina(Link link, Robot robot, String path, int seconds, int qtdPagina, int timeout, NaiveBayes naiveBayes, boolean peso, boolean train){
 		this.link = link;
+		this.robot = robot;
+		this.path = path;
+		this.seconds = seconds;
+		this.qtdPagina = qtdPagina;
+		this.timeout = timeout;
 		this.peso = peso;
 		this.train = train;
-		this.heuristica = heuristica;
+		this.naiveBayes = naiveBayes;
+		this.isNaiveBayes = true;
+		this.inicio();
+	}
+	
+	/**
+	 * Construtor para busca em largura
+	 * @param link
+	 * @param robot
+	 * @param path
+	 * @param seconds
+	 * @param qtdPagina
+	 * @param timeout
+	 */
+	public Pagina(Link link, Robot robot, String path, int seconds, int qtdPagina, int timeout){
+		this.link = link;
+		this.robot = robot;
+		this.path = path;
+		this.seconds = seconds;
+		this.qtdPagina = qtdPagina;
 		this.timeout = timeout;
-		this.regex = "htt(p|ps)://"+ this.link.getBaseAux() + ".*";
+		this.isNaiveBayes = false;
+		this.inicio();
+	}
+	
+	
+	private void inicio(){
+		this.sb = new StringBuilder();
+		this.files = new Files();
+		this.regex = "htt(p|ps)://" + this.link.getBaseAux() + ".*";
+		
 		this.listLink = new ArrayList<Link>();
 		this.listLink.add(this.link);
+		
 		this.setLink = new HashSet<String>();
 		this.setLink.add(link.getLink());
-		this.name = link.getBaseAux().replaceAll("\\.", "_");
 		
 		boolean www = this.link.getBaseAux().startsWith("www.");
 		int beginIndex = www ? 4 : 0;
 		int endIndex = this.link.getBaseAux().length() - 4;
-		this.site = this.link.getBaseAux().substring(beginIndex, endIndex).replace(".", "_");
-		
-		this.path = path;
-		this.naiveBayes = naiveBayes;
-		this.qtdPagina = qtdPagina;
-		this.seconds = seconds;
-		this.robot = robot;
+		this.name = this.link.getBaseAux().substring(beginIndex, endIndex).replace(".", "_");
 	}
 	
 	public void run(){
-		String format = ".html";
-		Files f = new Files();
-		
-		List<String> list = f.reader(this.path + this.name + ".txt");
-		for(String s : list){
-			if(!s.isEmpty()){
-				String [] array = s.split("\\s+");
-				
-				if(!this.setLink.contains(array[1])){
-					this.setLink.add(array[1]);
-					this.sb.append(s + "\n"); 
-				}
-			}
+		if(this.isNaiveBayes){
+			this.heuristicaNaiveBayes(this.link);
+		}else{
+			this.buscaLargura(this.link);
 		}
-		this.countDownloaded = list.size() + 1;
-		
-		WordProcessing pro = new WordProcessing();
-		
-		Stopword stopword = Stopword.NONE;
-		
+	}
+	
+	/**
+	 * Faz uma busca em largura usando o Naive Bayes para se guiar nos links positivos
+	 * @param linkStart
+	 */
+	private void heuristicaNaiveBayes(Link linkStart){
+			
 		for(int i=0; i<this.listLink.size(); i++){
+			
+			if(this.countDownloaded >= this.qtdPagina){
+				break;
+			}
 			
 			Link link = this.listLink.get(i);
 			System.out.println(link.getLink());
-			Document document = this.downloadAux(link.getLink());
-			if (document != null){
-				
-				String nameAux =  this.name+"_"+this.num;
-				f.save(document.toString(), this.path, nameAux, format);
-				
-				this.num++;
-//				if(this.setLink.contains(link.getLink())){
-					this.sb.append(nameAux + ".html" + " " + link.getLink() + "\n"); 
-//				}
-
-				this.countDownloaded++;
-				if(this.countDownloaded > this.qtdPagina){
-					break;
-				}
-
-				try {
-					TimeUnit.SECONDS.sleep(this.seconds);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			
+			//pega os links do documento que foi baixado
+			List<Link> linksDocument = this.download(link.getLink());
+			
+			//classifica os links baixados
+			linksDocument = this.classifyLinkNaive(linksDocument);
+			
+			//ordena os links e faz um corte com os melhores
+			int limiar = (int) (linksDocument.size() * 0.5);
+			Collections.sort(linksDocument);
+			
+			for(int j=0; j<limiar; j++){
+				String linkReal = linksDocument.get(j).getLink().replaceAll("#.*", "");
+				boolean mp4Pdf = linkReal.endsWith(".mp4") || linkReal.endsWith(".pdf");
+				if(!this.setLink.contains(linkReal) && !mp4Pdf){
+					this.listLink.add(linksDocument.get(j));
+					this.setLink.add(linkReal);
 				}
 			}
 			
-			if(this.countDownloaded % this.mod == 0){
-				System.out.println(link.getBaseAux() + " - " + this.countDownloaded + "/" + this.count + " - " + (this.countDownloaded/this.count) + "%");
+			try {
+				TimeUnit.SECONDS.sleep(this.seconds);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-		
-		//salva no final o estado
-		f.save(this.sb.toString(), this.path, this.name, ".txt");
 	}
 	
-	public Document downloadAux(String link){
-
-		Document document = null;
+	/**
+	 * Faz uma busca em largura no link
+	 * @param linkStart
+	 */
+	private void buscaLargura(Link linkStart){
+			
+		for(int i=0; i<this.listLink.size(); i++){
+			
+			if(this.countDownloaded >= this.qtdPagina){
+				break;
+			}
+			
+			Link link = this.listLink.get(i);
+			System.out.println(link.getLink());
+			List<Link> linksDocument = this.download(link.getLink());
+			
+			//evitar repeticao de link na lista
+			for(Link l : linksDocument){
+				String linkReal = l.getLink().replaceAll("#.*", "");
+				if(!this.setLink.contains(linkReal)){
+					this.listLink.add(l);
+					this.setLink.add(linkReal);
+				}
+			}
+			
+			try {
+				TimeUnit.SECONDS.sleep(this.seconds);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Faz o download da pagina
+	 * @param link
+	 * Link inicial
+	 * @return
+	 * Retorna os links dela
+	 */
+	private List<Link> download(String link){
+		
+		List<Link> listLinks = new ArrayList<Link>();
+		
 		try {
-			document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(timeout*1000).get();
+			Document document = Jsoup.connect(link).header("Content-Type", "text/html").timeout(this.timeout*1000).get();
 			Elements elements = document.select("a[href]");
 			
-			List<Link> listAux = new ArrayList<Link>();
+			String nameAux =  this.name+"_"+this.num;
+			this.files.save(document.toString(), this.path, nameAux, ".html");
+			this.num++;
 			
-			for (Element l : elements) {
-				String lin = l.attr("abs:href");
-				if(!lin.matches("\\s*") && lin.matches(this.regex) && !setLink.contains(lin)){	
+			for (Element element : elements) {
+				
+				String href = element.attr("abs:href");
+				boolean isEmpty = href.matches("\\s*");
+				boolean matche = href.matches(this.regex);
+				
+				if(!isEmpty && matche){
+					Link linkAux = new Link(href, element.text());
 					
-					Link link1 = new Link(lin, l.text());
 					//verifica se o link passa pelo robots.txt
-					boolean robots = this.verifyRobot(link1);
-					
-					if(robots){
-						if(this.heuristica){
-							//classificar o link para ver se faz ou nao o download
-							double limiar = 1;
-							boolean download = this.classifyLinkNaive(link1, this.peso, limiar);
-							
-							//treinar durante a execucao
-							if(this.train){
-								List<String> tokens = this.peso ? link1.getAllTokens2() : link1.getAllTokens();
-								Classe classe = download ? Classe.POSITIVO : Classe.NEGATIVO;
-								this.naiveBayes.train(tokens, classe);
-							}
-							
-							//se as condicoes forem verdadeiras, faz o download da pagina
-							if(download && (this.count < this.qtdPagina)){
-								listAux.add(link1);
-							}
-						}else{
-							listAux.add(link1);
-						}
-						this.count += listAux.size();
+					if(this.verifyRobot(linkAux)){
+						listLinks.add(linkAux);
 					}
 				}
 	        }
 			
-			if(this.heuristica){
-				int limiar = (int) (listAux.size() * 0.5);
-				Collections.sort(listAux);
-				int size = listAux.size() < limiar ? listAux.size() : limiar;
-				
-				for(int i=0; i< size; i++){
-					if(!this.setLink.contains(listAux.get(i).getLink())){
-						this.listLink.add(listAux.get(i));
-						this.setLink.add(listAux.get(i).getLink());
-					}
-				}
-			}else{
-				for(int i=0; i<listAux.size(); i++){
-					if(!this.setLink.contains(listAux.get(i).getLink())){
-						this.listLink.add(listAux.get(i));
-						this.setLink.add(listAux.get(i).getLink());
-					}
-				}
-			}
+			this.countDownloaded++;
 			
 		} catch (IOException e) {
 			System.err.println("Erro ao conectar no endereco: "+link+"\n");
 			e.printStackTrace();
 		}
-		return document;
+		
+		return listLinks;
 	}
 	
-	public boolean verifyRobot(Link link){
-		
+	/**
+	 * Verifica se o link pertence ao dominio
+	 * @param link
+	 * @return
+	 */
+	private boolean verifyRobot(Link link){
 		boolean retorno = true;
-//		System.out.println(link.getLink());
 		Agent agent = robot.getAgentByName("*");
 		for(ComandAgent comandAgent : agent.getListComandAgent()){
 			if(comandAgent.getComandAgent().equals(TComandAgent.ALLOW)){
 				if(link.getLink().matches(comandAgent.getRejex())){
 					retorno = true;
-//					System.out.println(link.getLink() + " - " + comandAgent.getRejex());
 				}
 			}else if(comandAgent.getComandAgent().equals(TComandAgent.DISALLOW)){
 				if(link.getLink().matches(comandAgent.getRejex())){
 					retorno = false;
-//					System.out.println(link.getLink() + " - " + comandAgent.getRejex());
 				}
 			}
 		}
-//		System.out.println("----------------");
 		return retorno;
 	}
 	
-	public boolean classifyLinkNaive(Link link, boolean peso, double limiar){
+	/**
+	 * Classifica os links
+	 * @param links
+	 * @return
+	 * Retorna uma lista dos links classificados positivamente
+	 */
+	private List<Link> classifyLinkNaive(List<Link> links){
+		
+		List<Link> listLinks = new ArrayList<Link>();
+		Set<String> setLinkPositivo = new HashSet<String>();
+		Set<String> setLinkNegativo = new HashSet<String>();
+		
+		for(int i=0; i<links.size(); i++){
+			
+			boolean download = this.classifyLinkNaive(links.get(i), this.peso, this.limiar);
+			
+			if(download){
+				listLinks.add(links.get(i));
+				setLinkPositivo.addAll(links.get(i).getAllTokens());
+			}else{
+				setLinkNegativo.addAll(links.get(i).getAllTokens());
+			}
+		}
+		
+		//treinar durante a execucao
+		if(this.train){
+			Iterator<String> positivoIterator = setLinkPositivo.iterator();
+			while (positivoIterator.hasNext()){
+				String s = positivoIterator.next();
+				if(s.length() > 2 && s.length() <= 8){
+					this.naiveBayes.train(s, Classe.POSITIVO);
+				}
+			}
+			
+			Iterator<String> negativoIterator = setLinkNegativo.iterator();
+			while (negativoIterator.hasNext()){
+				String s = negativoIterator.next();
+				if(s.length() > 2 && s.length() <= 8){
+					this.naiveBayes.train(s, Classe.NEGATIVO);
+				}
+			}
+			setLinkNegativo.clear();
+			setLinkPositivo.clear();
+		}
+		return listLinks;
+	}
+	
+	/**
+	 * Classifica um link
+	 * @param link
+	 * @param peso
+	 * @param limiar
+	 * @return
+	 */
+	private boolean classifyLinkNaive(Link link, boolean peso, double limiar){
 		
 		List<String> tokens = peso ? link.getAllTokens2() : link.getAllTokens();
 		NaiveBayesResult result = this.naiveBayes.classify(tokens);

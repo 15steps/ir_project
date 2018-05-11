@@ -29,6 +29,12 @@ public class NaiveBayes {
 		this.train(wordsList, classe);
 	}
 	
+	public void train(String word, Classe classe){
+		List<String> wordsList = new ArrayList<String>();
+		wordsList.add(word);
+		this.train(wordsList, classe);
+	}
+	
 	public void train(List<String> words, Classe classe){
 		
 		Map<String, Integer> map = this.frequence(words);
