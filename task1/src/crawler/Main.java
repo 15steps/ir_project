@@ -97,10 +97,10 @@ public class Main {
 		
 		//parametros
 		int segundos = 6;
-		int qtdPaginas = 10;
+		int qtdPaginas = 100;
 		int timeout = 25; //em segundos
 		boolean peso = false; //true, maior peso para a informacao da ancora
-		boolean train = true; //treinar para todo link verificado
+		boolean train = false; //treinar para todo link verificado
 		boolean heuristica = true; //se vai ou nao usar a heuristica, ou só busca em largura
 		
 		for(int i=0; i<listLinks.size(); i++){

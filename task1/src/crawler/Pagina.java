@@ -35,7 +35,7 @@ public class Pagina extends Thread{
 	private boolean peso;
 	private double limiar;
 	private boolean train;
-	private double countDownloaded;
+	private int countDownloaded;
 	private int timeout;
 	private int seconds;
 	private int qtdPagina;
@@ -98,15 +98,46 @@ public class Pagina extends Thread{
 		this.regex = "htt(p|ps)://" + this.link.getBaseAux() + ".*";
 		
 		this.listLink = new ArrayList<Link>();
-		this.listLink.add(this.link);
-		
 		this.setLink = new HashSet<String>();
-		this.setLink.add(link.getLink());
 		
 		boolean www = this.link.getBaseAux().startsWith("www.");
 		int beginIndex = www ? 4 : 0;
 		int endIndex = this.link.getBaseAux().length() - 4;
 		this.name = this.link.getBaseAux().substring(beginIndex, endIndex).replace(".", "_");
+		
+		List<String> list = this.files.reader(this.path + "#index_" + this.name + ".txt");
+		
+		this.sb.append("#FILES:\n");
+		
+		boolean listFiles = false;
+		
+		for(String s : list){
+			if(!s.isEmpty()){
+				
+				if(s.startsWith("#FILES:")){
+					listFiles = true;
+				}else if(s.startsWith("#LIST:")){
+					listFiles = false;
+				}else{
+					if(listFiles){
+						String [] array = s.split("\\s+");
+						this.setLink.add(array[1]);
+						this.sb.append(s + "\n");
+						this.num++;
+					}else{
+						this.setLink.add(s);
+						this.listLink.add(new Link(s, ""));
+					}	
+				}
+			}
+		}
+		
+		if(list.isEmpty()){
+			this.listLink.add(this.link);
+			this.setLink.add(link.getLink());
+		}else{
+			this.link = this.listLink.get(0);
+		}
 	}
 	
 	public void run(){
@@ -115,6 +146,12 @@ public class Pagina extends Thread{
 		}else{
 			this.buscaLargura(this.link);
 		}
+		
+		this.sb.append("\n#LIST:\n");
+		for(int i=this.countDownloaded; i<this.listLink.size(); i++){
+			this.sb.append(this.listLink.get(i).getLink()+"\n");
+		}
+		this.files.save(this.sb.toString(), this.path, "#index_" + this.name, ".txt");
 	}
 	
 	/**
@@ -226,7 +263,7 @@ public class Pagina extends Thread{
 					}
 				}
 	        }
-			
+			this.sb.append(nameAux + ".html" + " " + link + "\n");
 			this.countDownloaded++;
 			
 		} catch (IOException e) {
