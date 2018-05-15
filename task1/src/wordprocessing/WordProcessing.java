@@ -7,6 +7,15 @@ import java.util.Map;
 
 public class WordProcessing {
 
+	/**
+	 * Separa a entrada em um map de frequencia dos tokens
+	 * @param texto
+	 * @param stopword
+	 * @param acentuacao
+	 * @param pontuacao
+	 * @param numeros
+	 * @return
+	 */
 	public Map<String, Integer> tokensFrequency(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao, boolean numeros){
 		
 		List<String> tokensList = this.tokens(texto, stopword, acentuacao, pontuacao, numeros);
@@ -21,6 +30,15 @@ public class WordProcessing {
 		return map;
 	}
 	
+	/**
+	 * Separa em tokens a entrada
+	 * @param texto
+	 * @param stopword
+	 * @param acentuacao
+	 * @param pontuacao
+	 * @param numeros
+	 * @return
+	 */
 	public List<String> tokens(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao, boolean numeros){
 		
 		List<String> tokensList = new ArrayList<String>();
@@ -37,6 +55,15 @@ public class WordProcessing {
 		return tokensList;
 	}
 	
+	/**
+	 * Faz um processamento na entrada
+	 * @param texto
+	 * @param stopword
+	 * @param acentuacao
+	 * @param pontuacao
+	 * @param numeros
+	 * @return
+	 */
 	public String wordProcessing(String texto, Stopword stopword, boolean acentuacao, boolean pontuacao, boolean numeros){
 		List<String> tokensList = this.tokens(texto, stopword, acentuacao, pontuacao, numeros);
 		StringBuilder sb = new StringBuilder();

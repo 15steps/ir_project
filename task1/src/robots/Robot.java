@@ -91,6 +91,10 @@ public class Robot {
 		}
 	}
 	
+	/**
+	 * Gera o robot de acordo com o agente
+	 * @param agent
+	 */
 	private void genereteRobot(String agent){
 
 		List<String> allowList = new ArrayList<String>();
@@ -134,6 +138,11 @@ public class Robot {
 		this.agent.add(agents);
 	}
 	
+	/**
+	 * Retorna o agente passado como parametro
+	 * @param name
+	 * @return
+	 */
 	public Agent getAgentByName(String name){
 		for(Agent a : this.agent){
 			if(a.getAgent().equals(name)){

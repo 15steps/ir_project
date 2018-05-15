@@ -91,7 +91,9 @@ public class Pagina extends Thread{
 		this.inicio();
 	}
 	
-	
+	/**
+	 * Realiza os procedimentos iniciais para o funcionamento da classe
+	 */
 	private void inicio(){
 		this.sb = new StringBuilder();
 		this.files = new Files();
@@ -181,7 +183,8 @@ public class Pagina extends Thread{
 			
 			for(int j=0; j<limiar; j++){
 				String linkReal = linksDocument.get(j).getLink().replaceAll("#.*", "");
-				boolean mp4Pdf = linkReal.endsWith(".mp4") || linkReal.endsWith(".pdf");
+				boolean mp4Pdf = linkReal.endsWith(".mp4") || linkReal.endsWith(".pdf") || linkReal.endsWith(".png") 
+						|| linkReal.endsWith(".jpg") || linkReal.endsWith(".jpeg");
 				if(!this.setLink.contains(linkReal) && !mp4Pdf){
 					this.listLink.add(linksDocument.get(j));
 					this.setLink.add(linkReal);
@@ -215,7 +218,9 @@ public class Pagina extends Thread{
 			//evitar repeticao de link na lista
 			for(Link l : linksDocument){
 				String linkReal = l.getLink().replaceAll("#.*", "");
-				if(!this.setLink.contains(linkReal)){
+				boolean mp4Pdf = linkReal.endsWith(".mp4") || linkReal.endsWith(".pdf") || linkReal.endsWith(".png") 
+						|| linkReal.endsWith(".jpg") || linkReal.endsWith(".jpeg");
+				if(!this.setLink.contains(linkReal) && !mp4Pdf){
 					this.listLink.add(l);
 					this.setLink.add(linkReal);
 				}
@@ -310,7 +315,7 @@ public class Pagina extends Thread{
 		
 		for(int i=0; i<links.size(); i++){
 			
-			boolean download = this.classifyLinkNaive(links.get(i), this.peso, this.limiar);
+			boolean download = this.classifyLinkNaive(links.get(i), this.peso);
 			
 			if(download){
 				listLinks.add(links.get(i));
@@ -350,13 +355,13 @@ public class Pagina extends Thread{
 	 * @param limiar
 	 * @return
 	 */
-	private boolean classifyLinkNaive(Link link, boolean peso, double limiar){
+	private boolean classifyLinkNaive(Link link, boolean peso){
 		
 		List<String> tokens = peso ? link.getAllTokens2() : link.getAllTokens();
 		NaiveBayesResult result = this.naiveBayes.classify(tokens);
 		double prob = (result.getPositivo() - result.getNegativo());
 		link.setProb(prob);
-		if(prob > limiar){
+		if(prob > this.limiar){
 			return true;
 		}
 		return false;

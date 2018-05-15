@@ -8,12 +8,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Files {
 	
+	/**
+	 * Salva um documento
+	 * @param document
+	 * @param path
+	 * @param name
+	 * @param format
+	 */
 	public void save(String document, String path, String name, String format){
 		try {
 			FileWriter fileWriter = new FileWriter(path + name + format);
@@ -27,19 +32,29 @@ public class Files {
 		}
 	}
 	
-	public void reader(String path, String format){
-		File file = new File(path);
-		if(file.isDirectory()){
-//			for(File f : file.listFiles()){
-//				
-//			}
-		}else{
-			if(file.exists() && file.getName().endsWith(format)){
-				
+	/**
+	 * Cria os diretorios passados como entrada
+	 * @param paths
+	 */
+	public void mkdir(List<String> paths){
+		for(String path : paths){
+			try{
+				File dir = new File(path);
+				if(!dir.exists()){
+					dir.mkdirs();
+				}
+			} catch (Exception e) {
+				System.err.println("Erro ao criar o diretorio: "+ path +"\n");
+				e.printStackTrace();
 			}
 		}
 	}
 	
+	/**
+	 * Ler um arquivo e retorna uma lista das linhas
+	 * @param path
+	 * @return
+	 */
 	public List<String> reader(String path){
 		File file = new File(path);
 		List<String> list = new ArrayList<String>();

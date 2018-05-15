@@ -40,7 +40,7 @@ public class Main {
 		listRobots.add("htc.txt");
 		listRobots.add("banggood.txt");
 		
-		String path = "files_teste/";
+		String path = "files_teste_3/";
 		
 		List<String> listPaths = new ArrayList<String>();
 		listPaths.add(path + "apple/");
@@ -72,6 +72,8 @@ public class Main {
 		naiveBayes.train(negativo, Classe.NEGATIVO);
 		
 		Files file = new Files();
+		file.mkdir(listPaths);
+		
 		Classe classe = null;
 		
 		WordProcessing pro = new WordProcessing();
@@ -97,11 +99,11 @@ public class Main {
 		
 		//parametros
 		int segundos = 6;
-		int qtdPaginas = 100;
+		int qtdPaginas = 1000;
 		int timeout = 25; //em segundos
 		boolean peso = false; //true, maior peso para a informacao da ancora
-		boolean train = false; //treinar para todo link verificado
-		boolean heuristica = true; //se vai ou nao usar a heuristica, ou só busca em largura
+		boolean train = true; //treinar para todo link verificado
+		boolean heuristica = true; //se vai usar naive bayes, ou só busca em largura
 		
 		for(int i=0; i<listLinks.size(); i++){
 			Link link = new Link(listLinks.get(i), "SMARTPHONE");
