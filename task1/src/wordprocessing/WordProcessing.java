@@ -7,6 +7,16 @@ import java.util.Map;
 
 public class WordProcessing {
 
+	 private static WordProcessing instance = new WordProcessing();
+	 
+	 private WordProcessing() {
+	 
+	 }
+
+	 public static WordProcessing getInstance() {
+		 return instance;
+	 }
+	    
 	/**
 	 * Separa a entrada em um map de frequencia dos tokens
 	 * @param texto
@@ -53,6 +63,42 @@ public class WordProcessing {
 		}
 		
 		return tokensList;
+	}
+	
+	/**
+	 * Separa em tokens a entrada
+	 * @param texto
+	 * @param stopword
+	 * @param regex
+	 * Regex para usar como um filtro, se der match remove o token
+	 * @param acentuacao
+	 * @param pontuacao
+	 * @param numeros
+	 * @return
+	 */
+	public List<String> tokens(String texto, Stopword stopword, List<String> regex, boolean acentuacao, boolean pontuacao, boolean numeros){
+		
+		List<String> tokensList = new ArrayList<String>();
+		String wordPro = this.wordProcessing(texto, acentuacao, pontuacao, numeros);
+		String[] tokensArray = wordPro.split("\\s+");
+		
+		for(String token : tokensArray){
+			token = removerStopwords(token, stopword);
+			if(!token.isEmpty() && !this.isMatch(token, regex)){
+				tokensList.add(token);
+			}
+		}
+		
+		return tokensList;
+	}
+	
+	private boolean isMatch(String word, List<String> regex){
+		for(String r : regex){
+			if(word.matches(r)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

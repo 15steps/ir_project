@@ -70,7 +70,8 @@ public class Files {
 			reader.close();
 			br.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.err.println("Arquivo não encontrado: "+ path +"\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

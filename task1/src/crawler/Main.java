@@ -17,15 +17,15 @@ public class Main {
 		
 		
 		List<String> listLinks = new ArrayList<String>();
-		listLinks.add("https://www.apple.com/iphone/");
-		listLinks.add("https://www.samsung.com/us/mobile/phones/");
-		listLinks.add("https://www.asus.com/us/Phone/");
+		listLinks.add("https://www.apple.com/iphone");
+		listLinks.add("https://www.samsung.com/us/mobile/phones");
+		listLinks.add("https://www.asus.com/us/Phone");
 		listLinks.add("https://www.lg.com/us/cell-phones");
-		listLinks.add("https://www.mi.com/en/list/");
+		listLinks.add("https://www.mi.com/en/list");
 		listLinks.add("https://www.motorola.com/us/products/moto-smartphones");
-		listLinks.add("https://www.sonymobile.com/us/products/phones/");
-		listLinks.add("http://bluproducts.com/android-phones/");
-		listLinks.add("http://www.htc.com/us/");
+		listLinks.add("https://www.sonymobile.com/us/products/phones");
+		listLinks.add("http://bluproducts.com");
+		listLinks.add("http://www.htc.com/us");
 		listLinks.add("https://www.banggood.com/Wholesale-Smartphones-c-1567.html");
 		
 		List<String> listRobots = new Vector<String>();
@@ -40,7 +40,7 @@ public class Main {
 		listRobots.add("htc.txt");
 		listRobots.add("banggood.txt");
 		
-		String path = "files_teste_3/";
+		String path = "files_teste_com_negativo_2/";
 		
 		List<String> listPaths = new ArrayList<String>();
 		listPaths.add(path + "apple/");
@@ -76,7 +76,7 @@ public class Main {
 		
 		Classe classe = null;
 		
-		WordProcessing pro = new WordProcessing();
+		WordProcessing pro = WordProcessing.getInstance();
 		Stopword stopword = Stopword.NONE;
 		
 		List<String> lines = file.reader("features.txt");
@@ -99,7 +99,7 @@ public class Main {
 		
 		//parametros
 		int segundos = 6;
-		int qtdPaginas = 1000;
+		int qtdPaginas = 100;
 		int timeout = 25; //em segundos
 		boolean peso = false; //true, maior peso para a informacao da ancora
 		boolean train = true; //treinar para todo link verificado

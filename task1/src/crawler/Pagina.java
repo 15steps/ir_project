@@ -137,6 +137,12 @@ public class Pagina extends Thread{
 		if(list.isEmpty()){
 			this.listLink.add(this.link);
 			this.setLink.add(link.getLink());
+			
+			if(!this.link.getLink().equals(this.link.getBase())){
+				Link base = new Link(this.link.getBase(), "");
+				this.listLink.add(base);
+				this.setLink.add(base.getBase());
+			}
 		}else{
 			this.link = this.listLink.get(0);
 		}
@@ -178,7 +184,7 @@ public class Pagina extends Thread{
 			linksDocument = this.classifyLinkNaive(linksDocument);
 			
 			//ordena os links e faz um corte com os melhores
-			int limiar = (int) (linksDocument.size() * 0.5);
+			int limiar = (int) (linksDocument.size() * 1);
 			Collections.sort(linksDocument);
 			
 			for(int j=0; j<limiar; j++){

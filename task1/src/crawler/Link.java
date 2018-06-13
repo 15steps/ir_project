@@ -6,7 +6,7 @@ import java.util.List;
 import wordprocessing.Stopword;
 import wordprocessing.WordProcessing;
 
-public class Link implements Comparable {
+public class Link implements Comparable<Link> {
 
 	private String link;
 	private String description;
@@ -27,7 +27,7 @@ public class Link implements Comparable {
 		this.complemento = link.substring(index);
 		this.description = description;
 		
-		WordProcessing pro = new WordProcessing();
+		WordProcessing pro = WordProcessing.getInstance();
 		Stopword stopword = Stopword.NONE;
 		this.tokensComplemento = pro.tokens(this.complemento, stopword);
 		this.tokensDescription = pro.tokens(this.description, stopword);
@@ -120,11 +120,11 @@ public class Link implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object o) {
-		if (this.prob > ((Link) o).prob){
+	public int compareTo(Link o) {
+		if (this.prob > o.prob){
 			return -1;
 		}
-		if (this.prob < ((Link) o).prob){
+		if (this.prob < o.prob){
 			return 1;
 		}
 		return 0;
