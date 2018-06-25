@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup, Tag
 import requests
 import re
 from time import time
+from dicttoxml import dicttoxml
+from xml.dom.minidom import parseString
 
 samsung = 'https://www.samsung.com/us/mobile/phones/galaxy-note/' \
           'galaxy-note8-64gb-unlocked-deepsea-blue-sm-n950uzbaxaa/'  # working well
@@ -53,9 +55,16 @@ def main():
         t0 = time()
         print(site_name)
         specs = specsection(url, verbose=(True if site_name == '' else False))
+        pagedict = {}
 
         for spec_name, rx in regexes.items():
-            print('{0}: {1}'.format(spec_name, getspec(specs, rx)))
+            # print('{0}: {1}'.format(spec_name, getspec(specs, rx)))
+            pagedict[spec_name] = getspec(specs, rx)
+
+        xml = dicttoxml(pagedict, attr_type=None, custom_root="page")
+        print(parseString(xml).toprettyxml())
+        break
+
         print('*' * 50)
         acc_time.append(time() - t0)
 

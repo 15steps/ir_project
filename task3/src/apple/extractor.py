@@ -2,10 +2,6 @@ from helpers import getsoup, getinnertext, preprocess
 
 PHONE_SPECS_PAGE = "../../html/apple/iphone_specs.html"
 
-"""
-Extracts data from the specs section of any spec page
-"""
-
 
 def main():
     soup = getsoup(PHONE_SPECS_PAGE)

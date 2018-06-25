@@ -2,14 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ec88007-ac32-4d77-bca1-43a1099181f1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/banggood/extractor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../task1/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/../task1/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../task1/src/crawler/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../task1/src/crawler/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/apple.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/asus.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/banggood.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/blu.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/htc.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/lg.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/mi.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/motorola.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/samsung.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/files_new/robots/sony.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/src/project2/Consulta.java" beforeDir="false" afterPath="$PROJECT_DIR$/../task1/src/project2/Consulta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task1/src/project2/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../task1/src/project2/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../task2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../task2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../task2/src/classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/../task2/src/classification.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../task2/src/classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/../task2/src/classifier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bestbuy/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/banggood/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bestbuy/extractor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/apple/extractor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/apple/extractor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/wrapper/wrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/wrapper/wrapper.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,7 +31,32 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="wrapper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/wrapper/wrapper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="840">
+              <caret line="61" column="41" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="41" />
+              <folding>
+                <element signature="e#0#34#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="json_mapper.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/wrapper/json_mapper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="552">
+              <caret line="61" column="21" lean-forward="true" selection-start-line="61" selection-start-column="21" selection-end-line="61" selection-end-column="21" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -36,6 +73,8 @@
       <find>.*spec.*</find>
       <find>\d\.\d+[ ]Inch</find>
       <find>\d\d\.\dMP</find>
+      <find>find_specs</find>
+      <find>specsection</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -51,25 +90,25 @@
         <option value="$PROJECT_DIR$/src/samsung/extractor.py" />
         <option value="$PROJECT_DIR$/src/asus/extractor.py" />
         <option value="$PROJECT_DIR$/src/lg/extractor.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/apple/extractor.py" />
         <option value="$PROJECT_DIR$/src/util/helpers.py" />
         <option value="$PROJECT_DIR$/src/blu/extractor.py" />
         <option value="$PROJECT_DIR$/html/banggood/bluboo_s3.htm" />
-        <option value="$PROJECT_DIR$/src/wrapper/wrapper.py" />
         <option value="$PROJECT_DIR$/src/wrapper/report.txt" />
         <option value="$PROJECT_DIR$/src/bestbuy/extractor.py" />
         <option value="$PROJECT_DIR$/src/htc/extractor.py" />
         <option value="$PROJECT_DIR$/src/samsung/samsung.py" />
         <option value="$PROJECT_DIR$/src/mi/extractor.py" />
+        <option value="$PROJECT_DIR$/src/motorola/extractor.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/apple/extractor.py" />
+        <option value="$PROJECT_DIR$/src/wrapper/wrapper.py" />
+        <option value="$PROJECT_DIR$/src/wrapper/json_mapper.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="x" value="960" />
-    <option name="y" value="23" />
-    <option name="width" value="960" />
-    <option name="height" value="1177" />
+    <option name="width" value="1920" />
+    <option name="height" value="1200" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -79,6 +118,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -89,12 +129,13 @@
             <path>
               <item name="task3" type="b2602c69:ProjectViewProjectNode" />
               <item name="task3" type="462c0819:PsiDirectoryNode" />
-              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="task3" type="b2602c69:ProjectViewProjectNode" />
               <item name="task3" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="task3" type="b2602c69:ProjectViewProjectNode" />
@@ -102,17 +143,27 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="wrapper" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="task3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="task3" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="wrapper" type="462c0819:PsiDirectoryNode" />
+              <item name="files_new" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="reference.idesettings.emmet" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/wrapper" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
     </key>
@@ -129,25 +180,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.extractor (2)">
-    <configuration name="extractor (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="task3" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/htc" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/htc/extractor.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
+  <component name="RunManager" selected="Python.json_mapper">
     <configuration name="extractor (2)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="task3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -166,7 +199,7 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="extractor" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="extractor (3)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="task3" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -174,11 +207,29 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/bestbuy" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/motorola" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/bestbuy/extractor.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/motorola/extractor.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="json_mapper" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="task3" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/wrapper" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/wrapper/json_mapper.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -221,19 +272,19 @@
       <option name="MODULE_MODE" value="false" />
     </configuration>
     <list>
-      <item itemvalue="Python.wrapper" />
-      <item itemvalue="Python.extractor" />
-      <item itemvalue="Python.extractor (1)" />
       <item itemvalue="Python.samsung" />
       <item itemvalue="Python.extractor (2)" />
+      <item itemvalue="Python.extractor (3)" />
+      <item itemvalue="Python.wrapper" />
+      <item itemvalue="Python.json_mapper" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.json_mapper" />
+        <item itemvalue="Python.wrapper" />
+        <item itemvalue="Python.extractor (3)" />
         <item itemvalue="Python.extractor (2)" />
         <item itemvalue="Python.samsung" />
-        <item itemvalue="Python.extractor (1)" />
-        <item itemvalue="Python.extractor" />
-        <item itemvalue="Python.wrapper" />
       </list>
     </recent_temporary>
   </component>
@@ -256,13 +307,13 @@
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15677084" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5005208" side_tool="true" weight="0.32910246" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947917" visible="true" weight="0.3283972" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947917" weight="0.3283972" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3998187" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3998187" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -276,29 +327,32 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/wrapper/json_mapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="42" column="66" selection-start-line="42" selection-start-column="66" selection-end-line="42" selection-end-column="66" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/wrapper/wrapper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="7" column="43" lean-forward="true" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="43" />
+        <state relative-caret-position="75">
+          <caret line="5" column="39" selection-end-line="6" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wrapper/report.txt">
+    <entry file="file://$PROJECT_DIR$/src/wrapper/json_mapper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="21" lean-forward="true" selection-start-line="50" selection-start-column="21" selection-end-line="50" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wrapper/wrapper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="33" column="36" lean-forward="true" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
+        <state relative-caret-position="765">
+          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -501,13 +555,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="4" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lg/extractor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -536,13 +583,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/apple/extractor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="60" lean-forward="true" selection-start-line="20" selection-start-column="60" selection-end-line="20" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/util/helpers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -564,23 +604,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wrapper/wrapper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="22" column="4" lean-forward="true" selection-start-line="22" selection-start-column="4" selection-end-line="35" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/banggood/extractor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
           <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#53#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -595,9 +622,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="50" lean-forward="true" selection-end-line="10" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -605,8 +629,54 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="22" column="10" lean-forward="true" selection-end-line="22" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/motorola/extractor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="46" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="686">
+          <caret line="108" column="10" selection-start-line="108" selection-start-column="10" selection-end-line="108" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wrapper/files_new/lg/lg_0.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="26" lean-forward="true" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/apple/extractor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="55" selection-start-line="2" selection-start-column="55" selection-end-line="2" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wrapper/xml/apple_15.html" />
+    <entry file="file://$PROJECT_DIR$/src/wrapper/wrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="61" column="41" selection-start-line="61" selection-start-column="34" selection-end-line="61" selection-end-column="41" />
           <folding>
-            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wrapper/json_mapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="61" column="21" lean-forward="true" selection-start-line="61" selection-start-column="21" selection-end-line="61" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>

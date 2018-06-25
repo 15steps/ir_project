@@ -22,7 +22,7 @@ def main():
     print('-'*50+'\n')
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
-    # names = ['Naïve Bayes', 'Decision Tree', 'SVM', 'Logistic Regression', 'Multilayer Perceptron']
+    names = ['Naïve Bayes', 'Decision Tree', 'SVM', 'Logistic Regression', 'Multilayer Perceptron']
 
     clfs = [
         GaussianNB(),
@@ -32,7 +32,7 @@ def main():
         MLPClassifier(max_iter=1000, alpha=1)
     ]
 
-    for clf_name, clf in zip(names,clfs):
+    for clf_name, clf in zip(names, clfs):
         metrics = ['accuracy', 'precision', 'recall']
         scores = cross_validate(clf, X, y, scoring=metrics, cv=5, return_train_score=False, n_jobs=-1)
         scores = dict(map(lambda item: (item[0], mean(item[1])), scores.items()))
@@ -98,14 +98,14 @@ def featureselection(x_positives, x_negatives, y_positives, y_negatives):
 
     # print('#'*20)
     # print('Best good features')
-    # print(best)
+    # print(bbest)
     # print('Best bad features')
     # print(worst)
     # print('#'*20)
 
     best_cv = CountVectorizer()
-    # best_cv.fit([*best, *worst])
-    best_cv.fit(best)
+    best_cv.fit([*best, *worst])
+    # best_cv.fit(best)
     x = best_cv.transform(x_positives + x_negatives).toarray()
 
     print('end of feature selection')
