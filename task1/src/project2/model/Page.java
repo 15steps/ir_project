@@ -9,7 +9,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "page")
-@XmlType(propOrder = { "id" ,"title", "screenSize", "cameraRes", "screenResolution", "batteryCapacity", "ram", "internalMemory", "processorSpeed", "weight", "body", "tokens", "name"})
+@XmlType(propOrder = { "id" ,"title", "screenSize", "cameraRes", 
+		"screenResolution", "batteryCapacity", "ram", "internalMemory", 
+		"processorSpeed", "weight", "body", "tokens", "name"})
 public class Page {
 
 	private String title;

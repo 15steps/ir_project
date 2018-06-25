@@ -13,7 +13,6 @@ public class Postings implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private StringBuilder sb = new StringBuilder();
 	private List<Posting> postings = new ArrayList<Posting>();
 	private Map<String, Posting> map;
 	private boolean grap;
@@ -41,8 +40,12 @@ public class Postings implements Serializable{
 				qtd[i] = t.getCount();
 				docName[i] = t.getNameDocument();
 			}
+			
+			if(this.grap){
+				docIDs = graps;
+			}
 
-			Posting p = new Posting(key, docIDs, graps, qtd, this.grap, docName);
+			Posting p = new Posting(key, docIDs, qtd, this.grap, docName);
 			this.postings.add(p);
 		}
 	}
@@ -56,12 +59,37 @@ public class Postings implements Serializable{
 		}
 		return this.map.containsKey(term) ? this.map.get(term) : null;
 	}
-
-	@Override
-	public String toString() {
-		return this.sb.toString();
+	
+	public int[] idToGrap (int[] IDs){
+		
+		int[] graps = new int[IDs.length];
+		for(int i=0; i<IDs.length; i++){
+			if(i==0){
+				graps[i] = IDs[i];
+			}else{
+				graps[i] = IDs[i] - IDs[i-1];
+			}
+		}
+		return graps;
 	}
 
+	public int[] grapToIds (int[] grap){
+		
+		int[] IDs = new int[grap.length];
+		for(int i=0; i<IDs.length; i++){
+			if(i==0){
+				IDs[i] = grap[i];
+			}else{
+				IDs[i] = grap[i-1] + grap[i];
+			}
+		}
+		return IDs;
+	}
+
+	public void setMap(Map<String, Posting> map) {
+		this.map = map;
+	}
+	
 }
 
 
