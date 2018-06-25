@@ -8,7 +8,6 @@ public class Posting implements Serializable{
 	
 	private String term;
 	private int[] docIDs;
-	private int[] graps;
 	private int[] qtd;
 	private boolean grap;
 	private String[] docName;
@@ -16,10 +15,9 @@ public class Posting implements Serializable{
 	public Posting() {
 		
 	}
-	public Posting(String term, int[] docIDs, int[] graps, int[] qtd, boolean grap, String[] docName) {
+	public Posting(String term, int[] docIDs, int[] qtd, boolean grap, String[] docName) {
 		this.term = term;
 		this.docIDs = docIDs;
-		this.graps = graps;
 		this.qtd = qtd;
 		this.grap = grap;
 		this.docName = docName;
@@ -35,12 +33,6 @@ public class Posting implements Serializable{
 	}
 	public void setDocIDs(int[] docIDs) {
 		this.docIDs = docIDs;
-	}
-	public int[] getGraps() {
-		return graps;
-	}
-	public void setGraps(int[] graps) {
-		this.graps = graps;
 	}
 	public int[] getQtd() {
 		return qtd;
@@ -70,12 +62,7 @@ public class Posting implements Serializable{
 			if(i>0){
 				sb.append("; ");
 			}
-
-			if(this.grap){
-				sb.append(this.graps[i]);
-			}else{
-				sb.append(this.docIDs[i]);
-			}
+			sb.append(this.docIDs[i]);
 			sb.append(',');
 			sb.append(this.qtd[i]);
 			sb.append(',');
