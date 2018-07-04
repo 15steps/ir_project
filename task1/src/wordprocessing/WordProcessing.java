@@ -164,7 +164,7 @@ public class WordProcessing {
 		palavra = palavra.replaceAll("[áàãâ]","a");
 		palavra = palavra.replaceAll("[éèê]","e");
 		palavra = palavra.replaceAll("[íìî]","i");
-		palavra = palavra.replaceAll("[óõõô]","o");
+		palavra = palavra.replaceAll("[óõô]","o");
 		palavra = palavra.replaceAll("[úùû]","u");
 		palavra = palavra.replaceAll("ç","c");
 		return palavra;

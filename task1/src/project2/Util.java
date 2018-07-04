@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -22,6 +21,7 @@ import javax.xml.bind.Unmarshaller;
 
 import project2.model.Attributes;
 import project2.model.Page;
+import project2.model.Posting;
 import project2.model.Quartis;
 import project2.model.Token;
 import wordprocessing.Stopword;
@@ -69,17 +69,17 @@ public class Util {
 		return postings;
 	}
 	
-	public void processarPagesAtributos(List<Page> pages){
+	public Postings processarPagesAtributos(List<Page> pages, boolean grap){
 		
 		List<Attributes> attributesList = new ArrayList<Attributes>();
 		
-		double[] max = new double[9];
+		double[] max = new double[5];
 		
 		for(Page p : pages){
 			Attributes attri = processarAtributos(p);
 			attributesList.add(attri);
 			
-			double[] attributes = attri.getAttributes();
+			double[] attributes = attri.getAttributesQuartis();
 			
 			for(int j=0; j<attributes.length; j++){
 				if(attributes[j] > max[j]){
@@ -87,6 +87,10 @@ public class Util {
 				}
 			}
 		}
+		Map<String, Posting> map = new HashMap<String, Posting>();
+		Quartis[][] quartisList = new Quartis[5][4];
+		String[] nameList = attributesList.get(0).getNamesQuartis();
+		String[] nameNormalList = attributesList.get(0).getNamesNormal();
 
 		for(int j=0; j<max.length; j++){
 			double a = max[j] / 4;
@@ -94,12 +98,98 @@ public class Util {
 			double c = a * 3;
 			double d = max[j];
 			
-			Quartis q1 = new Quartis(0, a);
-			Quartis q2 = new Quartis(a, b);
-			Quartis q3 = new Quartis(b, c);
-			Quartis q4 = new Quartis(c, d);
+			quartisList[j][0] = new Quartis(0, a);
+			quartisList[j][1] = new Quartis(a, b);
+			quartisList[j][2] = new Quartis(b, c);
+			quartisList[j][3] = new Quartis(c, d);
+		}		
+			
+		for(int j=0; j<quartisList.length; j++){
+			for(int k=0; k<quartisList[0].length; k++){
+
+				Quartis quartis = quartisList[j][k];
+				String key = quartis.getTag() + " / " + nameList[j];
+				
+				List<Integer> docIDsList = new ArrayList<>();
+				List<String> docNameList = new ArrayList<>();
+				
+				for(int i=0; i<pages.size(); i++){
+					Page page = pages.get(i);
+					
+					Attributes attri = processarAtributos(page);
+					
+					double a = 0;
+					if (j == 0){
+						a = attri.getScreenSize();
+					}else if(j == 1){
+						a = attri.getCameraRes();
+					}else if(j == 2){
+						a = attri.getBatteryCapacity();
+					}else if(j == 3){
+						a = attri.getProcessorSpeed();
+					}else if(j == 4){
+						a = attri.getWeight();
+					}
+					
+					if (quartis.contem(a)){
+						docIDsList.add(page.getId());
+						docNameList.add(page.getName());
+					}
+				}
+				
+				Posting pos = new Posting();
+				pos.setDocIDs(docIDsList.stream().mapToInt(i->i).toArray());
+				pos.setDocName(docNameList.stream().toArray(String[]::new));
+				pos.setGrap(false);
+				pos.setTerm(key);
+				
+				map.put(key, pos);
+			}
 		}
 		
+		
+		Map<String, List<Page>> mapAux = new HashMap<String, List<Page>>();
+
+		for(int j=0; j<pages.size(); j++){
+			Page page = pages.get(j);
+			Attributes attri = processarAtributos(page);
+
+			for(int i=0; i<nameNormalList.length; i++){
+				String a = "";
+				if(i==0){
+					a = attri.getScreenResolutionWidth() + "x" + attri.getScreenResolutionHeight();
+				}else if(i==1){
+					a = attri.getRam() + "";
+				}else if(i==2){
+					a = attri.getInternalMemory() + "";
+				}
+					
+				String key = a + " / " + nameNormalList[i];
+				if(mapAux.containsKey(key)){
+					mapAux.get(key).add(page);
+				}else{
+					List<Page> list = new ArrayList<>();
+					list.add(page);
+					mapAux.put(key, list);
+				}
+			}
+		}
+		
+		for(String key : mapAux.keySet()){
+			Posting pos = new Posting();
+			pos.setDocIDs(mapAux.get(key).stream().mapToInt(p -> p.getId()).toArray());
+			pos.setDocName(mapAux.get(key).stream().map(p -> p.getName()).toArray(String[]::new));
+			pos.setGrap(false);
+			pos.setTerm(key);
+			
+			map.put(key, pos);
+		}
+		
+		Postings postings = new Postings();
+		postings.setMap(map);
+		postings.setGrap(grap);
+
+		return postings;
 	}
 
 	public Map<String, Token> processar(Page page){
@@ -130,6 +220,8 @@ public class Util {
 			}
 			m.put(key, value);
 		}
+		page.setCountToken(tokens.size());
+		
 		return m;
 	}
 	

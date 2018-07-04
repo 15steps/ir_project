@@ -18,6 +18,9 @@ public class Postings implements Serializable {
 	private boolean grap;
 	private int qtd;
 
+	public Postings(){
+		
+	}
 	public Postings(boolean grap, Map<String, List<Token>> map) {
 		this.grap = grap;
 
@@ -101,6 +104,18 @@ public class Postings implements Serializable {
 
 	public void setQtd(int qtd) {
 		this.qtd = qtd;
+	}
+	public List<Posting> getPostings() {
+		return postings;
+	}
+	public void setPostings(List<Posting> postings) {
+		this.postings = postings;
+	}
+	public boolean isGrap() {
+		return grap;
+	}
+	public void setGrap(boolean grap) {
+		this.grap = grap;
 	}
 
 }

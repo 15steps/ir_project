@@ -122,17 +122,32 @@ public class Attributes {
 		this.name = name;
 	}
 	
-	public double[] getAttributes(){
-		double[] attributes = new double[9];
+	public double[] getAttributesQuartis(){
+		double[] attributes = new double[5];
 		attributes[0] = screenSize;
 		attributes[1] = cameraRes;
-		attributes[2] = screenResolutionWidth;
-		attributes[3] = screenResolutionHeight;
-		attributes[4] = batteryCapacity;
-		attributes[5] = ram;
-		attributes[6] = internalMemory;
-		attributes[7] = processorSpeed;
-		attributes[8] = weight;
+		attributes[2] = batteryCapacity;
+		attributes[3] = processorSpeed;
+		attributes[4] = weight;
 		return attributes;
 	}
+	
+	public String[] getNamesQuartis(){
+		String[] attributes = new String[5];
+		attributes[0] = "screen";
+		attributes[1] = "camera";
+		attributes[2] = "battery";
+		attributes[3] = "processor";
+		attributes[4] = "weight";
+		return attributes;
+	}
+	
+	public String[] getNamesNormal(){
+		String[] attributes = new String[3];
+		attributes[0] = "resolution";
+		attributes[1] = "ram";
+		attributes[2] = "memory";
+		return attributes;
+	}
+	
 }

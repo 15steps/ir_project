@@ -28,6 +28,7 @@ public class Page {
 	private List<Token> tokens = new ArrayList<Token>();
 	private int id;
 	private String name;
+	private int countToken;
 	
 	public Page() {
 		
@@ -137,6 +138,14 @@ public class Page {
 	@XmlElement(name="name")
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getCountToken() {
+		return countToken;
+	}
+
+	public void setCountToken(int countToken) {
+		this.countToken = countToken;
 	}
 	
 }

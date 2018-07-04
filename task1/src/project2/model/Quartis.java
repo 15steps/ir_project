@@ -19,6 +19,13 @@ public class Quartis {
 			this.tag = "(" + min + "-" + max + "]";
 		}
 	}
+	public boolean contem(double value){
+		if(min == 0){
+			return (value >= this.min && value <= this.max);
+		}else{
+			return (value > this.min && value <= this.max);
+		}
+	}
 	public double getMin() {
 		return min;
 	}
