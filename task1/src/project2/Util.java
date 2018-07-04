@@ -64,8 +64,9 @@ public class Util {
 				map.put(key, value);
 			}
 		}
-
-		return new Postings(grap, map);
+		Postings postings = new Postings(grap, map);
+		postings.setQtd(pages.size());
+		return postings;
 	}
 	
 	public void processarPagesAtributos(List<Page> pages){
