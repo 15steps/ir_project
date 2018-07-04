@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+import project2.Util;
 import project2.model.Attributes;
 import project2.model.Page;
 import project2.model.Posting;
@@ -16,13 +17,15 @@ public class Main {
 		String pathSerial = "serial.txt";
 		
 		//*
-		String path = "xml/";
+		String path = "xml_nome_id/";
 		List<Page> pages = util.ler(path);
 		
-		util.processarPagesAtributos(pages);
 		
-//		boolean grap = false;
-//		Postings p = util.processarPages(pages, grap);
+		boolean grap = false;
+		
+
+		Postings atributos = util.processarPagesAtributos(pages, grap);
+		Postings corpo = util.processarPages(pages, grap);
 		
 //		try {
 //			p.setMap(null);
@@ -32,15 +35,15 @@ public class Main {
 //		}
 		/**/
 				
-		/*
-		Postings postings = null;
-		try {
-			postings = (Postings) util.deSerialization(pathSerial);
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-
-		Consulta consulta = new Consulta(postings);
+		//*
+//		Postings postings = null;
+//		try {
+//			postings = (Postings) util.deSerialization(pathSerial);
+//		} catch (ClassNotFoundException | IOException e) {
+//			e.printStackTrace();
+//		}
+		
+		Consulta consulta = new Consulta(atributos);
 		String query = "";
 		
 		Scanner scanner = new Scanner(System.in);
@@ -48,7 +51,7 @@ public class Main {
 			System.out.println("Escreva uma consulta ou digite (SAIR)");
 			query = scanner.nextLine();
 			
-			List<Posting> list = consulta.search(query);
+			List<Posting> list = consulta.searchQuartis(query, false);
 			for(Posting po : list){
 				System.out.println(po.toString());
 			}
