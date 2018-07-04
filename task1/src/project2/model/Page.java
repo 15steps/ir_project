@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "page")
@@ -144,6 +145,7 @@ public class Page {
 		return countToken;
 	}
 
+	@XmlTransient
 	public void setCountToken(int countToken) {
 		this.countToken = countToken;
 	}

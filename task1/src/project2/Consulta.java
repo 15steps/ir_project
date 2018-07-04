@@ -43,6 +43,27 @@ public class Consulta {
 
 		return list;
 	}
+	
+	public List<Posting> searchQuartis(String query, boolean idf) {
+
+		List<String> regex = new ArrayList<>();
+		// regex.add("[0-9]*");
+		// regex.add(".{1}");
+		List<String> tokens = this.pro.tokens(query, Stopword.NONE, regex, true, true, false);
+		tokens.clear();
+		tokens.add(query);
+
+		List<Posting> list = new ArrayList<>();
+
+		for (String s : tokens) {
+			Posting p = this.postings.consult(s);
+			if (p != null) {
+				list.add(p);
+			}
+		}
+		
+		return list;
+	}
 
 	public List<Integer> cosineScore(String query, boolean useIdf) {
 		List<String> tokens = this.pro.tokens(query, Stopword.NONE, Arrays.asList(""), true, true, false);
@@ -57,7 +78,7 @@ public class Consulta {
 				int docID = p.getDocIDs()[i];
 				int freq = p.getQtd()[i];
 				scores[docID] = scores[docID] + (freq * idf);
-				// scores[docID] = scores[docID] + p.getSize()[i];
+				scores[docID] = scores[docID] + p.getSize()[i];
 			}
 		}
 
@@ -89,7 +110,6 @@ public class Consulta {
 					return o1.getValue().compareTo(o2.getValue());
 				} else {
 					return o2.getValue().compareTo(o1.getValue());
-
 				}
 			}
 		});

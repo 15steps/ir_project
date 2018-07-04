@@ -17,6 +17,7 @@ public class Token implements Comparable<Token>{
 	private int count;
 	private List<Integer> position = new ArrayList<>();
 	private String nameDocument;
+	private int size;
 	
 	public Token(String text, int idDocument, int count, List<Integer> position, String nameDocument) {
 		this.text = text;
@@ -102,6 +103,14 @@ public class Token implements Comparable<Token>{
 			return 1;
 		}
 		return 0;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 	
 	

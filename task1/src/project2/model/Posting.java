@@ -10,6 +10,7 @@ public class Posting implements Serializable {
 	private String term;
 	private int[] docIDs;
 	private int[] qtd;
+	private int[] size;
 	private boolean grap;
 	private String[] docName;
 	// Frequencia do termo nos documentos
@@ -87,6 +88,14 @@ public class Posting implements Serializable {
 		this.df = df;
 	}
 
+	public int[] getSize() {
+		return size;
+	}
+
+	public void setSize(int[] size) {
+		this.size = size;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -99,7 +108,7 @@ public class Posting implements Serializable {
 			}
 			sb.append(this.docIDs[i]);
 			sb.append(',');
-			sb.append(this.qtd[i]);
+			sb.append((this.qtd == null) ? "" : this.qtd[i]);
 			sb.append(',');
 			sb.append(this.docName[i]);
 		}

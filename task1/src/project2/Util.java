@@ -65,7 +65,6 @@ public class Util {
 			}
 		}
 		Postings postings = new Postings(grap, map);
-		postings.setQtd(pages.size());
 		return postings;
 	}
 	
@@ -157,11 +156,11 @@ public class Util {
 			for(int i=0; i<nameNormalList.length; i++){
 				String a = "";
 				if(i==0){
-					a = attri.getScreenResolutionWidth() + "x" + attri.getScreenResolutionHeight();
+					a = (int) attri.getScreenResolutionWidth() + "x" + (int) attri.getScreenResolutionHeight();
 				}else if(i==1){
-					a = attri.getRam() + "";
+					a = (int) attri.getRam() + "";
 				}else if(i==2){
-					a = attri.getInternalMemory() + "";
+					a = (int) attri.getInternalMemory() + "";
 				}
 					
 				String key = a + " / " + nameNormalList[i];
@@ -201,7 +200,8 @@ public class Util {
 		//		regex.add(".{1}");
 
 		List<String> tokens = this.pro.tokens(page.getBody(), Stopword.NONE, regex, true, true, false);
-
+		page.setCountToken(tokens.size());
+		
 		for (int j=0; j<tokens.size(); j++){
 			String key = tokens.get(j);
 
@@ -217,10 +217,11 @@ public class Util {
 				value.setIdDocument(page.getId());
 				value.addPosition(j+1);
 				value.incrementCount();
+				value.setSize(page.getCountToken());
 			}
 			m.put(key, value);
 		}
-		page.setCountToken(tokens.size());
+		
 		
 		return m;
 	}

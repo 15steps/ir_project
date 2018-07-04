@@ -30,6 +30,7 @@ public class Postings implements Serializable {
 			int[] docIDs = new int[value.size()];
 			int[] graps = new int[value.size()];
 			int[] qtd = new int[value.size()];
+			int[] size = new int[value.size()];
 			String[] docName = new String[value.size()];
 
 			for (int i = 0; i < value.size(); i++) {
@@ -43,6 +44,7 @@ public class Postings implements Serializable {
 				}
 				qtd[i] = t.getCount();
 				docName[i] = t.getNameDocument();
+				size[i] = t.getSize();
 			}
 
 			if (this.grap) {
@@ -50,6 +52,7 @@ public class Postings implements Serializable {
 			}
 
 			Posting p = new Posting(key, docIDs, qtd, this.grap, docName);
+			p.setSize(size);
 			this.postings.add(p);
 		}
 	}
