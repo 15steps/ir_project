@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +44,18 @@ public class Util {
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				pageXML = (Page) jaxbUnmarshaller.unmarshal(files[i]);
 			} catch (JAXBException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 			pageXML.setName(files[i].getName());
-			pageXML.setId(i+1);
+//			pageXML.setId(i+1);
 			pages.add(pageXML);
 		}
+		
+		Collections.sort(pages);
+		for(int i=0; i<pages.size(); i++){
+			pages.get(i).setId(i);
+		}
+		
 		return pages;
 	}
 	
@@ -108,9 +115,7 @@ public class Util {
 
 				Quartis quartis = quartisList[j][k];
 				String key = quartis.getTag() + " / " + nameList[j];
-				
-				List<Integer> docIDsList = new ArrayList<>();
-				List<String> docNameList = new ArrayList<>();
+				List<Page> pagesAux = new ArrayList<>();
 				
 				for(int i=0; i<pages.size(); i++){
 					Page page = pages.get(i);
@@ -131,14 +136,14 @@ public class Util {
 					}
 					
 					if (quartis.contem(a)){
-						docIDsList.add(page.getId());
-						docNameList.add(page.getName());
+						pagesAux.add(page);
 					}
 				}
 				
 				Posting pos = new Posting();
-				pos.setDocIDs(docIDsList.stream().mapToInt(i->i).toArray());
-				pos.setDocName(docNameList.stream().toArray(String[]::new));
+				pos.setDocIDs(pagesAux.stream().mapToInt(p -> p.getId()).toArray());
+				pos.setDocName(pagesAux.stream().map(p -> p.getName()).toArray(String[]::new));
+				pos.setQtd(pagesAux.stream().mapToInt(p -> p.getCountToken()).toArray());
 				pos.setGrap(false);
 				pos.setTerm(key);
 				
@@ -186,6 +191,7 @@ public class Util {
 		
 		Postings postings = new Postings();
 		postings.setMap(map);
+		postings.getPostings().addAll(map.values());
 		postings.setGrap(grap);
 
 		return postings;

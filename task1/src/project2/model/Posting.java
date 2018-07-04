@@ -108,7 +108,11 @@ public class Posting implements Serializable {
 			}
 			sb.append(this.docIDs[i]);
 			sb.append(',');
-			sb.append((this.qtd == null) ? "" : this.qtd[i]);
+			if(this.qtd != null){
+				sb.append(this.qtd[i]);
+			}else{
+				sb.append(0);
+			}
 			sb.append(',');
 			sb.append(this.docName[i]);
 		}

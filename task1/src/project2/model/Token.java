@@ -1,5 +1,6 @@
 package project2.model;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "tokens")
-@XmlType(propOrder = { "token", "idDocument", "count", "position", "nameDocument"})
+@XmlType(propOrder = { "token", "idDocument", "count", "position", "nameDocument", "size"})
 public class Token implements Comparable<Token>{
 
 	private String text;
@@ -109,6 +110,7 @@ public class Token implements Comparable<Token>{
 		return size;
 	}
 
+	@Transient
 	public void setSize(int size) {
 		this.size = size;
 	}

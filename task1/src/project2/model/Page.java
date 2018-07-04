@@ -1,19 +1,19 @@
 package project2.model;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "page")
 @XmlType(propOrder = { "id" ,"title", "screenSize", "cameraRes", 
 		"screenResolution", "batteryCapacity", "ram", "internalMemory", 
-		"processorSpeed", "weight", "body", "tokens", "name"})
-public class Page {
+		"processorSpeed", "weight", "body", "tokens", "name", "countToken"})
+public class Page implements Comparable<Page> {
 
 	private String title;
 	private String screenSize;
@@ -145,9 +145,24 @@ public class Page {
 		return countToken;
 	}
 
-	@XmlTransient
+	@Transient
 	public void setCountToken(int countToken) {
 		this.countToken = countToken;
+	}
+
+	@Override
+	public int compareTo(Page o) {
+		
+		int first = Integer.parseInt(this.name.replace(".xml", ""));
+		int second = Integer.parseInt(o.getName().replace(".xml", ""));
+		
+		if (first > second){
+			return 1;
+		}
+		if (first < second){
+			return -1;
+		}
+		return 0;
 	}
 	
 }

@@ -14,7 +14,7 @@ public class Postings implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private List<Posting> postings = new ArrayList<Posting>();
-	private Map<String, Posting> map;
+	private Map<String, Posting> map = new HashMap<String, Posting>();
 	private boolean grap;
 	private int qtd;
 
@@ -55,15 +55,14 @@ public class Postings implements Serializable {
 			p.setSize(size);
 			this.postings.add(p);
 		}
+		
+		for (Posting p : this.postings) {
+			this.map.put(p.getTerm(), p);
+		}
+		
 	}
 
 	public Posting consult(String term) {
-		if (this.map == null) {
-			this.map = new HashMap<String, Posting>();
-			for (Posting p : this.postings) {
-				this.map.put(p.getTerm(), p);
-			}
-		}
 		return this.map.containsKey(term) ? this.map.get(term) : null;
 	}
 
