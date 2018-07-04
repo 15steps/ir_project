@@ -141,10 +141,16 @@ public class Util {
 				}
 				
 				Posting pos = new Posting();
-				pos.setDocIDs(pagesAux.stream().mapToInt(p -> p.getId()).toArray());
+				
+				int [] IDs = pagesAux.stream().mapToInt(p -> p.getId()).toArray();
+				if(grap){
+					IDs = new Postings().idToGrap(IDs);
+				}
+				
+				pos.setDocIDs(IDs);
 				pos.setDocName(pagesAux.stream().map(p -> p.getName()).toArray(String[]::new));
 				pos.setQtd(pagesAux.stream().mapToInt(p -> p.getCountToken()).toArray());
-				pos.setGrap(false);
+				pos.setGrap(grap);
 				pos.setTerm(key);
 				
 				map.put(key, pos);
@@ -181,9 +187,15 @@ public class Util {
 		
 		for(String key : mapAux.keySet()){
 			Posting pos = new Posting();
-			pos.setDocIDs(mapAux.get(key).stream().mapToInt(p -> p.getId()).toArray());
+			
+			int [] IDs = mapAux.get(key).stream().mapToInt(p -> p.getId()).toArray();
+			if(grap){
+				IDs = new Postings().idToGrap(IDs);
+			}
+			
+			pos.setDocIDs(IDs);
 			pos.setDocName(mapAux.get(key).stream().map(p -> p.getName()).toArray(String[]::new));
-			pos.setGrap(false);
+			pos.setGrap(grap);
 			pos.setTerm(key);
 			
 			map.put(key, pos);

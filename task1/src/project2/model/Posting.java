@@ -116,6 +116,7 @@ public class Posting implements Serializable {
 			sb.append(',');
 			sb.append(this.docName[i]);
 		}
+		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 		return sb.toString();
 	}
 }

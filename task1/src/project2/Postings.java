@@ -28,7 +28,6 @@ public class Postings implements Serializable {
 
 			List<Token> value = map.get(key);
 			int[] docIDs = new int[value.size()];
-			int[] graps = new int[value.size()];
 			int[] qtd = new int[value.size()];
 			int[] size = new int[value.size()];
 			String[] docName = new String[value.size()];
@@ -36,19 +35,13 @@ public class Postings implements Serializable {
 			for (int i = 0; i < value.size(); i++) {
 				Token t = value.get(i);
 				docIDs[i] = t.getIdDocument();
-
-				if (i == 0) {
-					graps[i] = docIDs[i];
-				} else {
-					graps[i] = docIDs[i] - docIDs[i - 1];
-				}
 				qtd[i] = t.getCount();
 				docName[i] = t.getNameDocument();
 				size[i] = t.getSize();
 			}
 
 			if (this.grap) {
-				docIDs = graps;
+				docIDs = this.idToGrap(docIDs);
 			}
 
 			Posting p = new Posting(key, docIDs, qtd, this.grap, docName);
@@ -86,7 +79,7 @@ public class Postings implements Serializable {
 			if (i == 0) {
 				IDs[i] = grap[i];
 			} else {
-				IDs[i] = grap[i - 1] + grap[i];
+				IDs[i] = IDs[i - 1] + grap[i];
 			}
 		}
 		return IDs;
