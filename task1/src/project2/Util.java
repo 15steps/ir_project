@@ -72,6 +72,7 @@ public class Util {
 			}
 		}
 		Postings postings = new Postings(grap, map);
+		postings.setQtd(pages.size());
 		return postings;
 	}
 	
@@ -205,6 +206,7 @@ public class Util {
 		postings.setMap(map);
 		postings.getPostings().addAll(map.values());
 		postings.setGrap(grap);
+		postings.setQtd(pages.size());
 
 		return postings;
 	}
