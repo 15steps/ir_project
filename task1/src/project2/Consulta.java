@@ -66,24 +66,32 @@ public class Consulta {
 	}
 
 	public Map<Integer, Double> cosineScore(String query, boolean useIdf, int k) {
-		List<String> tokens = this.pro.tokens(query, Stopword.NONE, Arrays.asList(""), true, true, false);
+		List<String> tokens = new Util().processar(query);
+		
 		final int N = this.postings.getQtd();
 		double[] scores = new double[N];
 
 		for (String t : tokens) {
+//			System.out.println(t);
 			Posting p = postings.getMap().get(t);
-			double idf = useIdf ? Math.log(N / p.getDf()) : p.getDf();
+			
+			if(p != null && p.getDf() > 0){
+				double idf = useIdf ? Math.log(N / p.getDf()) : p.getDf();
 
-			for (int i = 0; i < p.getDocIDs().length; ++i) {
-				int docID = p.getDocIDs()[i];
-				int freq = p.getQtd()[i];
-				scores[docID] = scores[docID] + (freq * idf);
+				for (int i = 0; i < p.getDocIDs().length; ++i) {
+					int docID = p.getDocIDs()[i];
+					int freq = p.getQtd()[i];
+					scores[docID] = scores[docID] + (freq * idf);
+				}
+				
+				for (int i = 0; i < p.getDocIDs().length; ++i) {
+					int docID = p.getDocIDs()[i];
+					scores[docID] = scores[docID] / p.getSize()[i];
+				}
+			}else{
+//				System.out.println("ZERO");
 			}
 			
-			for (int i = 0; i < p.getDocIDs().length; ++i) {
-				int docID = p.getDocIDs()[i];
-				scores[docID] = scores[docID] / p.getSize()[i];
-			}
 		}
 		
 		Map<Integer, Double> _scores = new HashMap<>();

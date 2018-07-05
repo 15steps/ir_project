@@ -120,7 +120,7 @@ public class Postings implements Serializable {
 	public void setGrap(boolean grap) {
 		this.grap = grap;
 	}
-	public List<Posting> getFrequence(int limit){
+	public List<Posting> getFrequency(int limit){
 		List<Posting> list = new ArrayList<>();
 		list.addAll(this.postings);
 		Collections.sort(list);

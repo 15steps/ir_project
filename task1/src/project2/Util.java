@@ -26,6 +26,7 @@ import project2.model.Attributes;
 import project2.model.Page;
 import project2.model.Posting;
 import project2.model.Quartis;
+import project2.model.TAtributos;
 import project2.model.Token;
 import wordprocessing.Stopword;
 import wordprocessing.WordProcessing;
@@ -155,6 +156,74 @@ public class Util {
 		return new Quartis(min, max);
 	}
 	
+	public List<String> processar(String query){
+		List<String> tokens = WordProcessing.getInstance().tokens(query, Stopword.NONE, Arrays.asList(""), true, true, false);
+		String[] names = new Attributes().getNames();
+		String[] namesN = new Attributes().getNamesNormal();
+		
+		Set<String> set = new HashSet<>();
+		for(String name : names){
+			set.add(name);
+		}
+		
+		List<String> list = new ArrayList<>();
+		
+		for (int i=0; i<tokens.size(); ) {
+			if (set.contains(tokens.get(i))){
+				String aux = tokens.get(i) + " " + tokens.get(i+1);
+				list.add(aux);
+				i++;
+				i++;
+			}else{
+				list.add(tokens.get(i));
+				i++;
+			}
+		}
+		
+		List<String> retorno = new ArrayList<>();
+		for(String s : list){
+
+			if(s.contains(" ")){
+				String[] split = s.split(" ");
+				
+				boolean quartil = true;
+				for(String name : namesN){
+					if(name.equals(split[0]) || name.equals(split[1])){
+						quartil = false;
+						break;
+					}
+				}
+				
+				if(quartil){
+					
+					Quartis qua = null;
+					
+					for(TAtributos t : TAtributos.values()){
+						if(t.getDescription().contains(split[0])){
+							Quartis q = stringToQuartis(t.getGap());
+							if(q.contem(Double.parseDouble(split[1]))){
+								qua = q;
+								break;
+							}
+						}
+					}
+					
+					retorno.add(qua.getTag() + " / " + split[0]);
+				}else{
+					retorno.add(split[1] + " / " + split[0]);
+				}
+ 			}else{
+				retorno.add(s);
+			}
+		}
+		
+//		for(String s : retorno){
+//			System.out.println(s);
+//		}
+		
+		return retorno;
+	}
+	
 	public Postings stringToPostings (String aux){
 		
 		String[] split = aux.split("\n");
@@ -269,7 +338,7 @@ public class Util {
 				
 				pos.setDocIDs(IDs);
 				pos.setDocName(pagesAux.stream().map(p -> p.getName()).toArray(String[]::new));
-				pos.setQtd(pagesAux.stream().mapToInt(p -> p.getCountToken()).toArray());
+				pos.setQtd(pagesAux.stream().mapToInt(p -> 1).toArray());
 				pos.setGrap(grap);
 				pos.setTerm(key);
 				pos.setSize(pagesAux.stream().mapToInt(p -> 1).toArray());
