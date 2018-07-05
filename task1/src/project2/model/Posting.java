@@ -75,7 +75,7 @@ public class Posting implements Serializable, Comparable<Posting> {
 	}
 
 	public int getFreq() {
-		return freq;
+		return Arrays.stream(qtd).sum();
 	}
 
 	public void setFreq(int freq) {
@@ -83,7 +83,7 @@ public class Posting implements Serializable, Comparable<Posting> {
 	}
 
 	public int getDf() {
-		return df;
+		return docIDs.length;
 	}
 
 	public void setDf(int df) {

@@ -2,6 +2,7 @@ package project2.model;
 
 public enum TAtributos {
 	
+	EMPTY("EMPTY", "EMPTY"),
 	_0_0_TO_2_335_SCREEN("[0.0-2.335] / screen", "[0.0-2.335]"),
 	_2_335_TO_4_67_SCREEN("(2.335-4.67] / screen", "(2.335-4.67]"),
 	_4_67_TO_7_005_SCREEN("(4.67-7.005] / screen", "(4.67-7.005]"),
