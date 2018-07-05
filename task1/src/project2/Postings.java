@@ -2,9 +2,11 @@ package project2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import project2.model.Posting;
 import project2.model.Token;
@@ -117,6 +119,24 @@ public class Postings implements Serializable {
 	}
 	public void setGrap(boolean grap) {
 		this.grap = grap;
+	}
+	public List<Posting> getFrequence(int limit){
+		List<Posting> list = new ArrayList<>();
+		list.addAll(this.postings);
+		Collections.sort(list);
+		return list = list.stream().limit(limit).collect(Collectors.toList());
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.grap);
+		sb.append("\n");
+		for(Posting p : this.postings){
+			sb.append(p.toPrint());
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 }

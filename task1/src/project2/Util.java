@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -73,6 +75,73 @@ public class Util {
 		}
 		Postings postings = new Postings(grap, map);
 		postings.setQtd(pages.size());
+		return postings;
+	}
+	
+	public Posting stringToPosting (String aux, boolean gap){
+		
+		String[] split = aux.split(";");
+		String term = split[0];
+		
+		int[] docIDs = new int[split.length-1];
+		int[] qtd = new int[split.length-1];
+		int[] size = new int[split.length-1];
+		String[] docName = new String[split.length-1];
+		
+		for(int i=1; i<split.length; i++){
+			
+			String[] _split = split[i].split(",");
+			
+			int id = this.vbCodeToNum(_split[0]);//  Integer.parseInt(_split[0]);
+			int _qtd = this.vbCodeToNum(_split[1]);// Integer.parseInt(_split[1]);
+			int _size = this.vbCodeToNum(_split[2]);// Integer.parseInt(_split[2]);
+			
+			docIDs[i-1] = id;
+			qtd[i-1] = _qtd;
+			size[i-1] = _size;
+		}
+		
+		if(gap){
+			int[] _names = new Postings().grapToIds(docIDs); 
+			for(int i=0 ; i< _names.length; i++){
+				docName[i] = _names[i] + ".xml";
+			}
+		}else{
+			for(int i=0 ; i< docIDs.length; i++){
+				docName[i] = docIDs[i] + ".xml";
+			}
+		}
+		
+		Posting p = new Posting(term, docIDs, qtd, gap, docName);
+		p.setSize(size);
+		
+		return p;
+	}
+	
+	public Postings stringToPostings (String aux){
+		
+		String[] split = aux.split("\n");
+		String _gap = split[0];
+		boolean gap = _gap.equals("true");
+		Set<String> set = new HashSet<>();
+		Map<String, Posting> map = new HashMap<String, Posting>();
+		List<Posting> lista = new ArrayList<>();
+		
+		for(int i=1; i<split.length; i++){
+			Posting p = stringToPosting(split[i], gap);
+			lista.add(p);
+			map.put(p.getTerm(), p);
+			
+			for(String name : p.getDocName()){
+				set.add(name);
+			}
+		}
+		
+		Postings postings = new Postings();
+		postings.setGrap(gap);
+		postings.setPostings(lista);
+		postings.setMap(map);
+		postings.setQtd(set.size());
 		return postings;
 	}
 	
@@ -153,7 +222,7 @@ public class Util {
 				pos.setQtd(pagesAux.stream().mapToInt(p -> p.getCountToken()).toArray());
 				pos.setGrap(grap);
 				pos.setTerm(key);
-				
+				pos.setSize(pagesAux.stream().mapToInt(p -> 1).toArray());
 				map.put(key, pos);
 			}
 		}
@@ -198,6 +267,8 @@ public class Util {
 			pos.setDocName(mapAux.get(key).stream().map(p -> p.getName()).toArray(String[]::new));
 			pos.setGrap(grap);
 			pos.setTerm(key);
+			pos.setSize(mapAux.get(key).stream().mapToInt(p -> 1).toArray());
+			pos.setQtd(mapAux.get(key).stream().mapToInt(p -> 1).toArray());
 			
 			map.put(key, pos);
 		}
@@ -317,6 +388,81 @@ public class Util {
 		}
 		
 		return atri;
+	}
+	
+	public int vbCodeToNum(String vbCode){
+		String[] split = vbCode.split(" ");
+		
+		String convert = "";
+		for(String s : split){
+			convert = convert + s.substring(1, s.length());
+		}
+		
+		return Integer.parseInt(convert, 2);
+	}
+
+	public List<String> splitVbCode(String vbCode){
+		String[] spli = vbCode.split(" ");
+
+		List<String> lista  = new ArrayList<>();
+
+		System.out.println();
+
+		String aux = "";
+		for(int i=0; i<spli.length; i++){
+
+			aux = aux + " " + spli[i];
+			if(spli[i].charAt(0) == '1'){
+				lista.add(aux.trim());
+				aux = "";
+			}
+		}
+		return lista;
+	}
+	
+	public String numToVbCode(int numero){
+		
+		String bin = Integer.toBinaryString(numero);
+		int teto = (int) Math.ceil(bin.length() / 7.0);
+	
+		String[] divisao = new String[teto];	
+		
+		if(teto == 1){
+			String s = bin;
+			while(s.length() < 7){
+				s = 0 + s;
+			}
+			s = 1 + s;
+			divisao[0] = s;	
+		}else{
+		
+			for(int i=0; i<teto; i++){
+				int end = bin.length() - (7*i);
+				int start = end - 7;
+				if (start < 0){
+					start = 0;
+				}
+
+				int concat = i == 0 ? 1 : 0;
+
+				if(i == teto-1){
+					String s = bin.substring(start, end);
+					while(s.length() < 8){
+						s = 0 + s;
+					}
+					divisao[i] = s;	
+				}else{
+					divisao[i] = concat + bin.substring(start, end);	
+				}
+			}
+		}
+		
+		String end = "";
+		for(int i=divisao.length-1; i>=0; --i){
+			end = end + divisao[i] + " ";
+		}
+		
+		return end.trim();
 	}
 
 	public void salvar(Page page, String path){

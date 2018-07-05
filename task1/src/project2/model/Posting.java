@@ -3,7 +3,9 @@ package project2.model;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class Posting implements Serializable {
+import project2.Util;
+
+public class Posting implements Serializable, Comparable<Posting> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -95,6 +97,31 @@ public class Posting implements Serializable {
 	public void setSize(int[] size) {
 		this.size = size;
 	}
+	
+	public String toPrint(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.term);
+		sb.append(";");
+		
+		Util util = new Util();
+		
+		for (int i = 0; i < this.docIDs.length; i++) {
+			if (i > 0) {
+				sb.append(";");
+			}
+			sb.append(util.numToVbCode(this.docIDs[i]));
+			sb.append(',');
+			if(this.qtd != null){
+				sb.append(util.numToVbCode(this.qtd[i]));
+			}else{
+				sb.append(util.numToVbCode(0));
+			}
+			sb.append(',');
+			sb.append(util.numToVbCode(this.size[i]));
+		}
+		
+		return sb.toString();
+	}
 
 	@Override
 	public String toString() {
@@ -113,10 +140,22 @@ public class Posting implements Serializable {
 			}else{
 				sb.append(0);
 			}
+			
 			sb.append(',');
 			sb.append(this.docName[i]);
 		}
 		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 		return sb.toString();
+	}
+
+	@Override
+	public int compareTo(Posting o) {
+		if (this.docIDs.length > o.getDocIDs().length){
+			return -1;
+		}
+		if (this.docIDs.length < o.getDocIDs().length){
+			return 1;
+		}
+		return 0;
 	}
 }
