@@ -150,4 +150,16 @@ public class Attributes {
 		return attributes;
 	}
 	
+	public String[] getNames(){
+		String[] attributes = new String[8];
+		attributes[0] = "resolution";
+		attributes[1] = "ram";
+		attributes[2] = "memory";
+		attributes[3] = "screen";
+		attributes[4] = "camera";
+		attributes[5] = "battery";
+		attributes[6] = "processor";
+		attributes[7] = "weight";
+		return attributes;
+	}
 }

@@ -118,6 +118,43 @@ public class Util {
 		return p;
 	}
 	
+	public Postings merge(Postings first, Postings second){
+		
+		Postings novo = new Postings();
+		
+		List<Posting> list = new ArrayList<>();
+		list.addAll(first.getPostings());
+		list.addAll(second.getPostings());
+		
+		Map<String, Posting> map = new HashMap<String, Posting>();
+		for (Posting p : first.getPostings()) {
+			map.put(p.getTerm(), p);
+		}
+		for (Posting p : second.getPostings()) {
+			map.put(p.getTerm(), p);
+		}
+		
+		novo.setPostings(list);
+		novo.setMap(map);
+		novo.setGrap(first.isGrap());
+		novo.setQtd(first.getQtd());
+		return novo;
+	}
+	
+	public Quartis stringToQuartis(String s){
+		s = s.replaceAll("\\(", "");
+		s = s.replaceAll("\\)", "");
+		s = s.replaceAll("\\[", "");
+		s = s.replaceAll("\\]", "");
+		
+		String[] split = s.split("-");
+		
+		double min = Double.parseDouble(split[0]);
+		double max = Double.parseDouble(split[1]);
+		
+		return new Quartis(min, max);
+	}
+	
 	public Postings stringToPostings (String aux){
 		
 		String[] split = aux.split("\n");
@@ -186,6 +223,19 @@ public class Util {
 				Quartis quartis = quartisList[j][k];
 				String key = quartis.getTag() + " / " + nameList[j];
 				List<Page> pagesAux = new ArrayList<>();
+				
+//				String print = "" + key;
+//				print = print.toUpperCase();
+//				print = print.replaceAll("\\s", "");
+//				print = print.replaceAll("/", "_");
+//				print = print.replaceAll("\\(", "");
+//				print = print.replaceAll("\\)", "");
+//				print = print.replaceAll("\\[", "");
+//				print = print.replaceAll("\\]", "");
+//				print = print.replaceAll("\\.", "_");
+//				print = print.replaceAll("\\-", "_TO_");
+//				print = "_" + print + "(\"" + key +"\", \"" + quartis.getTag() + "\"),";
+//				System.out.println(print);
 				
 				for(int i=0; i<pages.size(); i++){
 					Page page = pages.get(i);
