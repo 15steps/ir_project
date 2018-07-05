@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import project2.model.Posting;
 import wordprocessing.Stopword;
@@ -65,7 +65,7 @@ public class Consulta {
 		return list;
 	}
 
-	public List<Integer> cosineScore(String query, boolean useIdf) {
+	public Map<Integer, Double> cosineScore(String query, boolean useIdf, int k) {
 		List<String> tokens = this.pro.tokens(query, Stopword.NONE, Arrays.asList(""), true, true, false);
 		final int N = this.postings.getQtd();
 		double[] scores = new double[N];
@@ -78,10 +78,14 @@ public class Consulta {
 				int docID = p.getDocIDs()[i];
 				int freq = p.getQtd()[i];
 				scores[docID] = scores[docID] + (freq * idf);
-				scores[docID] = scores[docID] + p.getSize()[i];
+			}
+			
+			for (int i = 0; i < p.getDocIDs().length; ++i) {
+				int docID = p.getDocIDs()[i];
+				scores[docID] = scores[docID] / p.getSize()[i];
 			}
 		}
-
+		
 		Map<Integer, Double> _scores = new HashMap<>();
 		for (int i = 0; i < N; ++i) {
 			_scores.put(i, scores[i]);
@@ -90,13 +94,44 @@ public class Consulta {
 		final boolean DESC = false;
 		Map<Integer, Double> ordScores = sortByComparator(_scores, DESC);
 		
-		List<Integer> docs = ordScores
-				.keySet()
-				.stream()
-				.limit(10)
-				.collect(Collectors.toList());
-
-		return docs;
+		final Map<Integer, Double> topScores = new HashMap<>(); 
+		List<Integer> keySet = new ArrayList<>();
+		keySet.addAll(ordScores.keySet());
+		List<Double> values = new ArrayList<>();
+		values.addAll(ordScores.values());
+		
+		IntStream.range(0, k)
+			.forEach(i -> {
+				topScores.put(keySet.get(i), values.get(i));
+			});
+		
+		return sortByComparator(topScores, DESC);
+	}
+	
+	/**
+	 * @param r1 Ranqueamento r1
+	 * @param r2 Ranqueamento r2
+	 * @return Correlação entre ranqueamentos
+	 * @throws Exception Lança exceção se ranqueamentos têm tamanhos diferentes
+	 */
+	public double queryCorrelation(Map<Integer, Double> r1, Map<Integer, Double> r2) throws Exception {
+		if (r1.size() != r2.size()) {
+			throw new Exception("Tamanho dos ranqueamentos divergem!");
+		}
+		
+		List<Integer> keys = new ArrayList<>();
+		keys.addAll(r1.keySet());
+//		Integer[] keys = (Integer[]) r1.keySet().toArray();
+		final int k = r1.size();
+		
+		double sum = 0;
+		for (Integer key : keys) {
+			double s1 = r1.get(key) != null ? r1.get(key) : 0;
+			double s2 = r2.get(key) != null ? r2.get(key) : 0;
+			sum += Math.pow(s1 - s2, 2);
+		}
+		
+		return 1 - (6 * sum) / (k * (Math.pow(k, 2) - 1));
 	}
 
 	private static Map<Integer, Double> sortByComparator(Map<Integer, Double> unsortMap, final boolean order) {
