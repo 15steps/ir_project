@@ -12,7 +12,8 @@ import project2.model.Posting;
 public class Main {
 
 	public static void main(String[] args){
-
+		
+		
 		Util util = new Util();
 		String pathSerial = "serial.txt";
 		
@@ -22,28 +23,11 @@ public class Main {
 		
 		
 		boolean grap = false;
+		boolean discreto = false;
 		
-
-		Postings atributos = util.processarPagesAtributos(pages, grap);
-		Postings corpo = util.processarPages(pages, grap);
 		
-//		try {
-//			p.setMap(null);
-//			util.serialization(pathSerial, p);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		/**/
-				
-		//*
-//		Postings postings = null;
-//		try {
-//			postings = (Postings) util.deSerialization(pathSerial);
-//		} catch (ClassNotFoundException | IOException e) {
-//			e.printStackTrace();
-//		}
-		
-		Consulta consulta = new Consulta(atributos);
+		Postings postings = discreto ? util.processarPagesAtributos(pages, grap) : util.processarPages(pages, grap);
+		Consulta consulta = new Consulta(postings);
 		String query = "";
 		
 		Scanner scanner = new Scanner(System.in);
@@ -51,13 +35,31 @@ public class Main {
 			System.out.println("Escreva uma consulta ou digite (SAIR)");
 			query = scanner.nextLine();
 			
-			List<Posting> list = consulta.searchQuartis(query, false);
+			List<Posting> list = discreto ? consulta.searchQuartis(query, false) : consulta.search(query, false);
 			for(Posting po : list){
 				System.out.println(po.toString());
 			}
 			System.out.println("______________________");
 		}while(!query.equals("SAIR"));
 		scanner.close();
+
+		
+		/*
+		try {
+			atributos.setMap(null);
+			util.serialization(pathSerial, atributos);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		/**/
+				
+		/*
+		Postings postings = null;
+		try {
+			postings = (Postings) util.deSerialization(pathSerial);
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
 		/**/
 		
 		//3.034.176 bytes (3,2 MB no disco) grap false
@@ -66,6 +68,5 @@ public class Main {
 		// 506.740 bytes (508 KB no disco) grap false
 		// 484.974 bytes (487 KB no disco) grap true
 	}
-
 	
 }

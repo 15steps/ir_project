@@ -56,6 +56,12 @@ public class Postings implements Serializable {
 	}
 
 	public Posting consult(String term) {
+		if(this.map == null){
+			this.map = new HashMap<String, Posting>();
+			for (Posting p : this.postings) {
+				this.map.put(p.getTerm(), p);
+			}
+		}
 		return this.map.containsKey(term) ? this.map.get(term) : null;
 	}
 
