@@ -35,6 +35,7 @@ def main():
         "body": ""
     }
 
+    n = 0
     p = Path('files_new/')
     for folder in p.iterdir():
         print(f"Converting folder: {folder.name}...")
@@ -57,7 +58,8 @@ def main():
                     xml = dicttoxml(pagedict, attr_type=None, custom_root="page")
                     prettyxml = parseString(xml).toprettyxml()
                     print(f"Writing file: {file.name}")
-                    write_to_file(prettyxml, file.name)
+                    write_to_file(prettyxml, f'{n}.xml')
+                    n += 1
         print(f"Done with {folder.name}!")
     print("Finished")
 

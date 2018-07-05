@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup, NavigableString
+from bs4 import BeautifulSoup, NavigableString, Tag, Comment
 import re
 
 """
@@ -7,8 +7,16 @@ Helper functions
 
 
 def preprocess(soup: BeautifulSoup) -> str:
-    filtered = removetags(soup)
-    text = getalltext(filtered)
+    # filtered = removetags(soup)
+    # text = getalltext(filtered)
+
+    specs = soup.find_all(find_specs)
+    specs = ' '.join([*map(lambda tag: tag.getText(), specs)])
+
+    texts = soup.findAll(text=True)
+    visible_text = filter(visible_tag, texts)
+    text = u" ".join(t.strip() for t in visible_text)
+
     return str.lower(text)
 
 
@@ -40,6 +48,22 @@ def removetags(sp: BeautifulSoup) -> BeautifulSoup:
     for tag in [*scripts, *styles, *noscript]:
         tag.extract()
     return sp
+
+
+def find_specs(tag: Tag):
+    rx = re.compile(r'.*(spec|feature).*')
+    for attr, val in tag.attrs.items():
+        if rx.search(str(val)):
+            return True
+    return False
+
+
+def visible_tag(element):
+    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
+        return False
+    if isinstance(element, Comment):
+        return False
+    return True
 
 
 def getsoup(path: str) -> BeautifulSoup:

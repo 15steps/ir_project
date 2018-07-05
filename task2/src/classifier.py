@@ -21,6 +21,8 @@ def main():
     print('# of Features: %i' % len(X[0]))
     print('-'*50+'\n')
 
+    return
+
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
     names = ['Naïve Bayes', 'Decision Tree', 'SVM', 'Logistic Regression', 'Multilayer Perceptron']
 
@@ -93,12 +95,20 @@ def featureselection(x_positives, x_negatives, y_positives, y_negatives):
     pos_features = dict(zip(cv1.get_feature_names(), mutual_info_classif(x_pos, y_positives, discrete_features=True)))
     neg_features = dict(zip(cv2.get_feature_names(), mutual_info_classif(x_neg, y_negatives, discrete_features=True)))
 
+    cv = CountVectorizer(stop_words='english', min_df=2, analyzer='word', token_pattern=r'[a-zA-Z][a-zA-Z][a-zA-Z]*')
+    X = cv.fit_transform(x_positives + x_negatives)
+    Y = y_positives + y_negatives
+    feats = dict(zip(cv.get_feature_names(), mutual_info_classif(X, Y, discrete_features=True)))
+
     best = sorted(pos_features, key=pos_features.get, reverse=True)[:1000]
     worst = sorted(neg_features, key=neg_features.get, reverse=True)[:1000]
 
-    # print('#'*20)
-    # print('Best good features')
-    # print(bbest)
+    bbest = sorted(feats, key=feats.get, reverse=True)[:1000]
+
+    print('#'*50)
+    print('Best good features')
+    print(bbest)
+    print('#'*50)
     # print('Best bad features')
     # print(worst)
     # print('#'*20)
